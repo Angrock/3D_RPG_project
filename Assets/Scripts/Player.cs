@@ -41,9 +41,9 @@ public class Player : MonoBehaviour {
         Debug.Log("Test text mage attack");
     }
 
-    public void GetDamage(float damage) {
-        currentHP = Mathf.Max(0, currentHP - damage);
-        if (currentHP < 0) Death();
+    public void GetDamage(float damageHP) {
+        currentHP = Mathf.Max(0, currentHP - damageHP);
+        if (currentHP <= 0) Death();
     }
 
     void Death() {
