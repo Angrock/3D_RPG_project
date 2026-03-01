@@ -8,12 +8,14 @@ public class Player : MonoBehaviour {
     public float mageDamage { get; private set; }
 
     new Rigidbody rigidbody;
+    Animator animator;
 
     public static Player instance;
 
     void Awake() {
         instance = this;
         rigidbody = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
         physicDamage = 10f;
         mageDamage = 15f;
         currentHP = maxHP;
@@ -31,14 +33,18 @@ public class Player : MonoBehaviour {
         float speedZ = (Input.GetKey(Settings.forwardKey) ? speed : Input.GetKey(Settings.backwardKey) ? -speed : 0) * runEffect;
         float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
         rigidbody.linearVelocity = new Vector3(speedX / coefficient, rigidbody.linearVelocity.y, speedZ / coefficient);
+        animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
+        Debug.Log(animator.GetBool("isMove"));
     }
 
     void PhysicAttack() {
         Debug.Log("Test text phisic attack");
+        animator.SetTrigger("TriggerPhisycAttack");
     }
 
     void MageAttack() {
         Debug.Log("Test text mage attack");
+        animator.SetTrigger("TriggerMageAttack");
     }
 
     public void GetDamage(float damageHP) {
