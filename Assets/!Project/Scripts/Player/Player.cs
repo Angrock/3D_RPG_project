@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 
     new Rigidbody rigidbody;
     Animator animator;
+    new Camera camera;
 
     public static Player instance;
 
@@ -16,6 +17,7 @@ public class Player : MonoBehaviour {
         instance = this;
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        camera = Camera.main;
         physicDamage = 10f;
         mageDamage = 15f;
         currentHP = maxHP;
@@ -32,9 +34,8 @@ public class Player : MonoBehaviour {
         float speedX = (Input.GetKey(Settings.leftwardKey) ? -speed : Input.GetKey(Settings.rightwardKey) ? speed : 0) * runEffect;
         float speedZ = (Input.GetKey(Settings.forwardKey) ? speed : Input.GetKey(Settings.backwardKey) ? -speed : 0) * runEffect;
         float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
-        rigidbody.linearVelocity = new Vector3(speedX / coefficient, rigidbody.linearVelocity.y, speedZ / coefficient);
+        rigidbody.linearVelocity = camera.transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + camera.transform.forward * (speedZ / coefficient);
         animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
-        Debug.Log(animator.GetBool("isMove"));
     }
 
     void PhysicAttack() {
