@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     public const float maxHP = 100f;
-    public const float speed = 4.4f;
+    public const float speed = 3.0f;
     public float currentHP { get; private set; }
     public float physicDamage { get; private set; }
     public float mageDamage { get; private set; }
