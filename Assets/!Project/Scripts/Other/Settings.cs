@@ -9,4 +9,7 @@ public static class Settings {
 
     public static float musicVolume = 1f;
     public static float soundVolume = 1f;
+
+    public static float mouseSentityX = 60f;
+    public static float mouseSentityY = 20f;
 }

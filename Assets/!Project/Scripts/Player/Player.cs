@@ -6,6 +6,8 @@ public class Player : MonoBehaviour {
     public float currentHP { get; private set; }
     public float physicDamage { get; private set; }
     public float mageDamage { get; private set; }
+    public float attackPhisycDistance { get; private set; }
+    public float attackMageDistance { get; private set; }
 
     new Rigidbody rigidbody;
     Animator animator;
@@ -20,7 +22,13 @@ public class Player : MonoBehaviour {
         camera = Camera.main;
         physicDamage = 10f;
         mageDamage = 15f;
+        attackPhisycDistance = 1f;
+        attackMageDistance = 8f;
         currentHP = maxHP;
+    }
+
+    void Start() {
+        HUD.instance.sliderHP.maxValue = maxHP;
     }
 
     void FixedUpdate() {
@@ -41,20 +49,31 @@ public class Player : MonoBehaviour {
     void PhysicAttack() {
         Debug.Log("Test text phisic attack");
         animator.SetTrigger("TriggerPhisycAttack");
+        foreach (BaseEnemy enemy in GameManager.instance.enemies)
+            if (Vector3.Distance(transform.position, enemy.transform.position) < attackPhisycDistance)
+                enemy.GetDamage(physicDamage);
+        GameManager.instance.ClearNullEnemies();
     }
 
     void MageAttack() {
         Debug.Log("Test text mage attack");
         animator.SetTrigger("TriggerMageAttack");
+        foreach (BaseEnemy enemy in GameManager.instance.enemies)
+            if (Vector3.Distance(transform.position, enemy.transform.position) < attackMageDistance) {
+                enemy.GetDamage(physicDamage);
+                break;
+            }
+        GameManager.instance.ClearNullEnemies();
     }
 
     public void GetDamage(float damageHP) {
         currentHP = Mathf.Max(0, currentHP - damageHP);
+        HUD.instance.sliderHP.value = currentHP;
         if (currentHP <= 0) Death();
     }
 
     void Death() {
         Debug.Log("Test text death player");
-        MainMenu.instance.GameOver();
+        HUD.instance.GameOver();
     }
 }

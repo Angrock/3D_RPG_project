@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour {
     public static MainMenu instance;
@@ -7,19 +8,15 @@ public class MainMenu : MonoBehaviour {
         instance = this;
     }
 
+    public void GameStart() {
+        SceneManager.LoadScene("Main");
+    }
+
     public void GameExit() {
     #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
     #else
         Application.Quit();
     #endif
-    }
-
-    public void GameWin() {
-        Debug.Log("Test text game win");
-    }
-
-    public void GameOver() {
-        Debug.Log("Test text game over");
     }
 }

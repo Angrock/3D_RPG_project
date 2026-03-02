@@ -1,7 +1,9 @@
-using UnityEngine;
-
 public class MeeleEnemy : BaseEnemy {
-    public override void Attack() {
-        Debug.Log("Test text attack meele enemy. Radius target - 10 m");
+    protected override void InizializeValues() {
+        maxHP = 100f;
+        damage = 10f;
+        speed = 3.4f;
+        attackDistance = 0.6f;
+        attackCooldown = 1f;
     }
 }
