@@ -1,6 +1,9 @@
 using UnityEngine;
 
 public class Player : MonoBehaviour {
+    [SerializeField] AnimationClip physicAttackClip;
+    [SerializeField] AnimationClip mageAttackClip;
+
     public const float maxHP = 100f;
     public const float speed = 3.0f;
     public float currentHP { get; private set; }
@@ -9,9 +12,12 @@ public class Player : MonoBehaviour {
     public float attackPhisycDistance { get; private set; }
     public float attackMageDistance { get; private set; }
 
+    float timer;
+    float currentAttackCooldown;
+    bool isAttack;
+
     new Rigidbody rigidbody;
     Animator animator;
-    new Camera camera;
 
     public static Player instance;
 
@@ -19,12 +25,14 @@ public class Player : MonoBehaviour {
         instance = this;
         rigidbody = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
-        camera = Camera.main;
         physicDamage = 10f;
         mageDamage = 15f;
         attackPhisycDistance = 1f;
         attackMageDistance = 8f;
         currentHP = maxHP;
+        timer = 0;
+        currentAttackCooldown = 0;
+        isAttack = false;
     }
 
     void Start() {
@@ -33,8 +41,20 @@ public class Player : MonoBehaviour {
 
     void FixedUpdate() {
         Move();
-        if (Input.GetKey(Settings.physicAttackKey)) PhysicAttack();
-        else if (Input.GetKey(Settings.mageAttackKey)) MageAttack();
+        if (Input.GetKeyDown(Settings.physicAttackKey) && (!isAttack)) PhysicAttack();
+        else if (Input.GetKeyDown(Settings.mageAttackKey) && (!isAttack)) MageAttack();
+
+        if (timer < currentAttackCooldown) {
+            timer += Time.fixedDeltaTime;
+        }
+        else if (timer >= currentAttackCooldown && isAttack) {
+            isAttack = false;
+        }
+    }
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+            GameMenu.instance.gameObject.SetActive(!GameMenu.instance.gameObject.activeSelf);
     }
 
     void Move() {
@@ -42,12 +62,15 @@ public class Player : MonoBehaviour {
         float speedX = (Input.GetKey(Settings.leftwardKey) ? -speed : Input.GetKey(Settings.rightwardKey) ? speed : 0) * runEffect;
         float speedZ = (Input.GetKey(Settings.forwardKey) ? speed : Input.GetKey(Settings.backwardKey) ? -speed : 0) * runEffect;
         float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
-        rigidbody.linearVelocity = camera.transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + camera.transform.forward * (speedZ / coefficient);
+        rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
         animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
     }
 
     void PhysicAttack() {
         Debug.Log("Test text phisic attack");
+        timer = 0;
+        currentAttackCooldown = physicAttackClip.length;
+        isAttack = true;
         animator.SetTrigger("TriggerPhisycAttack");
         foreach (BaseEnemy enemy in GameManager.instance.enemies)
             if (Vector3.Distance(transform.position, enemy.transform.position) < attackPhisycDistance)
@@ -57,6 +80,9 @@ public class Player : MonoBehaviour {
 
     void MageAttack() {
         Debug.Log("Test text mage attack");
+        timer = 0;
+        currentAttackCooldown = mageAttackClip.length;
+        isAttack = true;
         animator.SetTrigger("TriggerMageAttack");
         foreach (BaseEnemy enemy in GameManager.instance.enemies)
             if (Vector3.Distance(transform.position, enemy.transform.position) < attackMageDistance) {
