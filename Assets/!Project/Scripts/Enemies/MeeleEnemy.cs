@@ -3,7 +3,7 @@ public class MeeleEnemy : BaseEnemy {
         maxHP = 100f;
         damage = 5f;
         speed = 3.4f;
-        attackDistance = 0.6f;
+        attackDistance = 1.0f;
         attackCooldown = 1.5f;
     }
 }

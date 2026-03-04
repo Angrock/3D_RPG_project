@@ -41,6 +41,10 @@ public abstract class BaseEnemy : MonoBehaviour {
         }
     }
 
+    private void Update() {
+        transform.LookAt(Player.instance.transform, Vector3.up);
+    }
+
     void Move() {
         agent.SetDestination(Player.instance.transform.position);
         animator.SetBool("isMove", true);

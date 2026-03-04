@@ -1871,7 +1871,7 @@ CapsuleCollider:
   m_Radius: 0.3624366
   m_Height: 1.928189
   m_Direction: 1
-  m_Center: {x: 0.009883734, y: 0.8947958, z: 0}
+  m_Center: {x: 0.009883734, y: 0.91, z: 0}
 --- !u!95 &196421636
 Animator:
   serializedVersion: 7
@@ -1885,7 +1885,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 9dbb7ab1fbef137419f6f656bd25c4c7, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -7718,6 +7718,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderHP: {fileID: 1972415194}
+  sliderMP: {fileID: 371838596}
+  sliderMageCooldown: {fileID: 91416368}
 --- !u!114 &952542300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9987,7 +9989,7 @@ CapsuleCollider:
   m_Radius: 0.3624366
   m_Height: 1.928189
   m_Direction: 1
-  m_Center: {x: 0.009883734, y: 0.8947958, z: 0}
+  m_Center: {x: 0.009883734, y: 0.91, z: 0}
 --- !u!95 &1250715878
 Animator:
   serializedVersion: 7
@@ -10001,7 +10003,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: f9ba6b02883a684428807b6a50b54b8c, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0

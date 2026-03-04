@@ -7,6 +7,7 @@ public class GameMenu : MonoBehaviour {
     void Awake() {
         instance = this;
         gameObject.SetActive(false);
+        SetActiveCursor(false);
     }
 
     public void SaveGame()
@@ -22,5 +23,10 @@ public class GameMenu : MonoBehaviour {
     public void ReturnToMainMenu()
     {
         SceneManager.LoadScene("UI_Dev");
+    }
+
+    public void SetActiveCursor(bool isEnabled) {
+        Cursor.lockState = isEnabled ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = isEnabled;
     }
 }

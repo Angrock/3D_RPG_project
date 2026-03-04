@@ -6,8 +6,6 @@ public class CameraController : MonoBehaviour {
     float verticalRotation;
 
     void Awake() {
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
         minVerticalRotation = -5f;
         maxVerticalRotation = 30f;
         verticalRotation = transform.localEulerAngles.x;
