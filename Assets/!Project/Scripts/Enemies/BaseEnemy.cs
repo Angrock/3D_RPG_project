@@ -60,6 +60,11 @@ public abstract class BaseEnemy : MonoBehaviour {
         timeAttack = 0f;
     }
 
+    public void SetNewHP(float newHP) {
+        currentHP = Mathf.Clamp(newHP, 0, maxHP);
+        sliderHP.value = currentHP;
+    }
+
     public void GetDamage(float damageHP) {
         currentHP = Mathf.Max(0, currentHP - damageHP);
         sliderHP.value = currentHP;

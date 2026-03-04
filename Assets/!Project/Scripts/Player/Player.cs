@@ -112,10 +112,20 @@ public class Player : MonoBehaviour {
         GameManager.instance.ClearNullEnemies();
     }
 
+    public void SetNewHP(float newHP) {
+        currentHP = Mathf.Clamp(newHP, 0, maxHP);
+        HUD.instance.sliderHP.value = currentHP;
+    }
+
     public void GetDamage(float damageHP) {
         currentHP = Mathf.Max(0, currentHP - damageHP);
         HUD.instance.sliderHP.value = currentHP;
         if (currentHP <= 0) Death();
+    }
+
+    public void SetNewMP(float newMP) {
+        currentMP = Mathf.Clamp(newMP, 0, maxMP);
+        HUD.instance.sliderMP.value = currentMP;
     }
 
     public void SpendMP(float spendValue) {
