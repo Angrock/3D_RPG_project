@@ -1,9 +1,17 @@
-public class RangeEnemy : BaseEnemy {
-    protected override void InizializeValues() {
-        maxHP = 50f;
-        damage = 12f;
-        speed = 1.2f;
-        attackDistance = 8.8f;
-        attackCooldown = 3.25f;
+namespace RPGProject
+{
+    /// <summary>
+    /// Враг дальнего боя.
+    /// </summary>
+    public class RangeEnemy : BaseEnemy
+    {
+        protected override void InitializeValues()
+        {
+            MaxHP = 50f;
+            Damage = 12f;
+            Speed = 1.2f;
+            AttackDistance = 8.8f;
+            AttackCooldown = 3.25f;
+        }
     }
 }

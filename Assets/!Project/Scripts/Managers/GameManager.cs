@@ -1,21 +1,51 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour {
-    public List<BaseEnemy> enemies;
+namespace RPGProject
+{
+    /// <summary>
+    /// Менеджер игры. Управляет состоянием игры и врагами.
+    /// </summary>
+    public class GameManager : MonoBehaviour
+    {
+        [SerializeField] private List<BaseEnemy> _enemies = new List<BaseEnemy>();
 
-    public static GameManager instance;
+        public IReadOnlyList<BaseEnemy> Enemies => _enemies;
 
-    void Awake() {
-        instance = this;
-    }
+        private void Awake()
+        {
+            _enemies = new List<BaseEnemy>();
+        }
 
-    public void ClearNullEnemies() {
-        for (int i = 0; i < enemies.Count; i++)
-            if (!enemies[i].isAlive) {
-                Destroy(enemies[i].gameObject);
-                enemies.RemoveAt(i);
-                i--;
+        public void AddEnemy(BaseEnemy enemy)
+        {
+            if (!_enemies.Contains(enemy))
+            {
+                _enemies.Add(enemy);
             }
+        }
+
+        public void RemoveEnemy(BaseEnemy enemy)
+        {
+            _enemies.Remove(enemy);
+        }
+
+        public void ClearNullEnemies()
+        {
+            for (int i = _enemies.Count - 1; i >= 0; i--)
+            {
+                if (!_enemies[i].IsAlive)
+                {
+                    var enemy = _enemies[i];
+                    _enemies.RemoveAt(i);
+                    Destroy(enemy.gameObject);
+                }
+            }
+        }
+
+        public bool CheckWin()
+        {
+            return _enemies.Count == 0;
+        }
     }
 }

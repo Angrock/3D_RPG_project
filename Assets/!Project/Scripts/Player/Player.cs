@@ -1,135 +1,202 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour {
-    public AnimationClip physicAttackClip;
-    public AnimationClip mageAttackClip;
+namespace RPGProject
+{
+    public class Player : GameEntrypoint
+    {
+        [Header("Атаки")]
+        [SerializeField] private AnimationClip _physicAttackClip;
+        [SerializeField] private AnimationClip _mageAttackClip;
 
-    public const float maxHP = 100f;
-    public const float maxMP = 100f;
-    public const float speed = 3.0f;
-    public float currentHP { get; private set; }
-    public float currentMP { get; private set; }
-    public float physicDamage { get; private set; }
-    public float mageDamage { get; private set; }
-    public float attackPhisycDistance { get; private set; }
-    public float attackMageDistance { get; private set; }
-    public float costSpell { get; private set; }
+        [Header("Характеристики")]
+        public const float MaxHP = 100f;
+        public const float MaxMP = 100f;
+        public const float Speed = 3.0f;
 
-    float timer;
-    float currentAttackCooldown;
-    bool isAttack;
+        [field: SerializeField] public float PhysicDamage { get; private set; } = 10f;
+        [field: SerializeField] public float MageDamage { get; private set; } = 15f;
+        [field: SerializeField] public float AttackPhysicDistance { get; private set; } = 1f;
+        [field: SerializeField] public float AttackMageDistance { get; private set; } = 8f;
+        [field: SerializeField] public float CostSpell { get; private set; } = 20f;
 
-    new Rigidbody rigidbody;
-    Animator animator;
+        public float CurrentHP { get; private set; }
+        public float CurrentMP { get; private set; }
 
-    public static Player instance;
+        public event System.Action<float> OnHPChanged;
+        public event System.Action<float> OnMPChanged;
+        public event System.Action OnDeath;
 
-    void Awake() {
-        instance = this;
-        rigidbody = GetComponent<Rigidbody>();
-        animator = GetComponent<Animator>();
-        physicDamage = 10f;
-        mageDamage = 15f;
-        attackPhisycDistance = 1f;
-        attackMageDistance = 8f;
-        currentHP = maxHP;
-        currentMP = maxMP;
-        costSpell = 20f;
-        timer = 0;
-        currentAttackCooldown = 0;
-        isAttack = false;
-    }
+        private float _timer;
+        private float _currentAttackCooldown;
+        private bool _isAttack;
 
-    void Start() {
-        HUD.instance.sliderHP.maxValue = maxHP;
-        HUD.instance.sliderMP.maxValue = maxMP;
-        HUD.instance.sliderMageCooldown.maxValue = mageAttackClip.length;
-    }
+        private Rigidbody _rigidbody;
+        private Animator _animator;
 
-    void FixedUpdate() {
-        Move();
-        InputAttacks();
-        ChangeTimerAttack();
-        RecoverMP(1f / 18f);
-    }
+        protected override void OnInitialize()
+        {
+            _rigidbody = GetComponent<Rigidbody>();
+            _animator = GetComponent<Animator>();
 
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P)) {
-            GameMenu.instance.SetActiveCursor(!GameMenu.instance.gameObject.activeSelf);
-            GameMenu.instance.gameObject.SetActive(!GameMenu.instance.gameObject.activeSelf);
+            CurrentHP = MaxHP;
+            CurrentMP = MaxMP;
+            _timer = 0;
+            _currentAttackCooldown = 0;
+            _isAttack = false;
         }
-    }
 
-    void InputAttacks() {
-        if (Input.GetKeyDown(Settings.physicAttackKey) && (!isAttack)) PhysicAttack();
-        else if (Input.GetKeyDown(Settings.mageAttackKey) && (!isAttack)) MageAttack();
-    }
+        private void FixedUpdate()
+        {
+            if (!_isStarted) return;
 
-    void ChangeTimerAttack() {
-        if (timer < currentAttackCooldown) {
-            timer += Time.fixedDeltaTime;
+            Move();
+            InputAttacks();
+            ChangeTimerAttack();
+            RecoverMP(1f / 18f);
         }
-        else if (timer >= currentAttackCooldown && isAttack) {
-            isAttack = false;
-        }
-    }
 
-    void Move() {
-        float runEffect = Input.GetKey(Settings.runKey) ? 2f : 1f;
-        float speedX = (Input.GetKey(Settings.leftwardKey) ? -speed : Input.GetKey(Settings.rightwardKey) ? speed : 0) * runEffect;
-        float speedZ = (Input.GetKey(Settings.forwardKey) ? speed : Input.GetKey(Settings.backwardKey) ? -speed : 0) * runEffect;
-        float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
-        rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
-        animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
-    }
+        private void Update()
+        {
+            if (!_isStarted) return;
 
-    void PhysicAttack() {
-        Debug.Log("Test text phisic attack");
-        timer = 0;
-        currentAttackCooldown = physicAttackClip.length;
-        isAttack = true;
-        animator.SetTrigger("TriggerPhisycAttack");
-        foreach (BaseEnemy enemy in GameManager.instance.enemies)
-            if (Vector3.Distance(transform.position, enemy.transform.position) < attackPhisycDistance)
-                enemy.GetDamage(physicDamage);
-        GameManager.instance.ClearNullEnemies();
-    }
-
-    void MageAttack() {
-        if (currentMP < costSpell) return;
-        SpendMP(costSpell);
-        HUD.instance.sliderMageCooldown.value = 0;
-        Debug.Log("Test text mage attack");
-        timer = 0;
-        currentAttackCooldown = mageAttackClip.length;
-        isAttack = true;
-        animator.SetTrigger("TriggerMageAttack");
-        foreach (BaseEnemy enemy in GameManager.instance.enemies)
-            if (Vector3.Distance(transform.position, enemy.transform.position) < attackMageDistance) {
-                enemy.GetDamage(physicDamage);
-                break;
+            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+            {
+                GameMenu.Instance?.SetActiveCursor(!GameMenu.Instance.gameObject.activeSelf);
+                GameMenu.Instance?.gameObject.SetActive(!GameMenu.Instance.gameObject.activeSelf);
             }
-        GameManager.instance.ClearNullEnemies();
-    }
+        }
 
-    public void GetDamage(float damageHP) {
-        currentHP = Mathf.Max(0, currentHP - damageHP);
-        HUD.instance.sliderHP.value = currentHP;
-        if (currentHP <= 0) Death();
-    }
+        private void InputAttacks()
+        {
+            if (Input.GetKeyDown(Settings.PhysicAttackKey) && !_isAttack)
+                PhysicAttack();
+            else if (Input.GetKeyDown(Settings.MageAttackKey) && !_isAttack)
+                MageAttack();
+        }
 
-    public void SpendMP(float spendValue) {
-        currentMP = Mathf.Max(0, currentMP - spendValue);
-        HUD.instance.sliderMP.value = currentMP;
-    }
+        private void ChangeTimerAttack()
+        {
+            if (_timer < _currentAttackCooldown)
+            {
+                _timer += Time.fixedDeltaTime;
+            }
+            else if (_timer >= _currentAttackCooldown && _isAttack)
+            {
+                _isAttack = false;
+            }
+        }
 
-    public void RecoverMP(float recoverValue) {
-        currentMP = Mathf.Min(currentMP + recoverValue, maxMP);
-        HUD.instance.sliderMP.value = currentMP;
-    }
+        private void Move()
+        {
+            float runEffect = Input.GetKey(Settings.RunKey) ? 2f : 1f;
+            float speedX = (Input.GetKey(Settings.LeftwardKey) ? -Speed : Input.GetKey(Settings.RightwardKey) ? Speed : 0) * runEffect;
+            float speedZ = (Input.GetKey(Settings.ForwardKey) ? Speed : Input.GetKey(Settings.BackwardKey) ? -Speed : 0) * runEffect;
+            float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
+            _rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, _rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
+            _animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
+        }
 
-    void Death() {
-        Debug.Log("Test text death player");
-        HUD.instance.GameOver();
+        private void PhysicAttack()
+        {
+            if (_physicAttackClip == null)
+            {
+                Debug.LogWarning("[Player] _physicAttackClip не назначен!");
+                return;
+            }
+
+            Debug.Log("Test text phisic attack");
+            _timer = 0;
+            _currentAttackCooldown = _physicAttackClip.length;
+            _isAttack = true;
+            _animator.SetTrigger("TriggerPhisycAttack");
+
+            // Находим всех врагов на сцене и атакуем
+            var enemies = FindObjectsOfType<BaseEnemy>();
+            foreach (var enemy in enemies)
+            {
+                if (enemy.IsAlive && Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
+                {
+                    enemy.TakeDamage(PhysicDamage);
+                }
+            }
+        }
+
+        private void MageAttack()
+        {
+            if (CurrentMP < CostSpell) return;
+
+            if (_mageAttackClip == null)
+            {
+                Debug.LogWarning("[Player] _mageAttackClip не назначен!");
+                return;
+            }
+
+            SpendMP(CostSpell);
+            HUD.Instance?.SetMageCooldown(0);
+
+            Debug.Log("Test text mage attack");
+            _timer = 0;
+            _currentAttackCooldown = _mageAttackClip.length;
+            _isAttack = true;
+            _animator.SetTrigger("TriggerMageAttack");
+
+            // Находим всех врагов на сцене и атакуем
+            var enemies = FindObjectsOfType<BaseEnemy>();
+            foreach (var enemy in enemies)
+            {
+                if (enemy.IsAlive && Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance)
+                {
+                    enemy.TakeDamage(PhysicDamage);
+                    break;
+                }
+            }
+        }
+
+        public void TakeDamage(float damage)
+        {
+            Debug.Log($"[Player] Получен урон: {damage}, было HP: {CurrentHP}");
+            Debug.Log($"[Player] HUD.Instance = {HUD.Instance != null}");
+            
+            CurrentHP = Mathf.Max(0, CurrentHP - damage);
+            
+            Debug.Log($"[Player] Новое HP: {CurrentHP}");
+            
+            OnHPChanged?.Invoke(CurrentHP);
+            
+            if (HUD.Instance != null)
+            {
+                HUD.Instance.SetHP(CurrentHP);
+            }
+            else
+            {
+                Debug.LogWarning("[Player] HUD.Instance = null, не могу обновить HP!");
+            }
+
+            if (CurrentHP <= 0)
+            {
+                Death();
+            }
+        }
+
+        public void SpendMP(float amount)
+        {
+            CurrentMP = Mathf.Max(0, CurrentMP - amount);
+            OnMPChanged?.Invoke(CurrentMP);
+            HUD.Instance?.SetMP(CurrentMP);
+        }
+
+        public void RecoverMP(float amount)
+        {
+            CurrentMP = Mathf.Min(CurrentMP + amount, MaxMP);
+            OnMPChanged?.Invoke(CurrentMP);
+            HUD.Instance?.SetMP(CurrentMP);
+        }
+
+        private void Death()
+        {
+            Debug.Log("Test text death player");
+            OnDeath?.Invoke();
+            HUD.Instance?.GameOver();
+        }
     }
 }
