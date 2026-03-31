@@ -1,57 +1,38 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RPGProject
-{
-    public class GameMenu : GameEntrypoint
-    {
-        private static GameMenu _instance;
-        public static GameMenu Instance => _instance;
-
-        private void Awake()
-        {
-            _instance = this;
-            gameObject.SetActive(false);
-            SetActiveCursor(false);
+namespace RPGProject {
+    public class GameMenu : GameEntrypoint {
+        protected override void OnInitialize() {
+            SetActive(false);
         }
 
-        public void SetActive(bool isActive)
-        {
-            gameObject.SetActive(isActive);
+        public void SetActive(bool isActive) {
             SetActiveCursor(isActive);
+            gameObject.SetActive(isActive);
         }
 
-        public void SaveGame()
-        {
-            var saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
-            saveService?.SaveGame();
-        }
-
-        public void LoadGame()
-        {
-            var saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
-            saveService?.LoadGame();
-        }
-
-        public void ReturnToMainMenu()
-        {
-            var gameStateManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameStateManager>();
-            gameStateManager?.SetState(GameStateManager.GameState.Menu);
-            SceneManager.LoadScene("UI_Dev");
-        }
-
-        public void ResumeGame()
-        {
-            var gameStateManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameStateManager>();
-            gameStateManager?.SetState(GameStateManager.GameState.Playing);
-        }
-
-        public void SetActiveCursor(bool isEnabled)
-        {
+        public void SetActiveCursor(bool isEnabled) {
             Cursor.lockState = isEnabled ? CursorLockMode.None : CursorLockMode.Locked;
             Cursor.visible = isEnabled;
         }
 
-        protected override void OnShutdown() => _instance = null;
+        public void SaveGame() {
+            Debug.Log("Save Game");
+            ISaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
+            saveService?.SaveGame();
+        }
+
+        public void LoadGame() {
+            Debug.Log("Load Game");
+            ISaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
+            saveService?.LoadGame();
+        }
+
+        public void ReturnToMainMenu() {
+            GameStateManager gameStateManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameStateManager>();
+            gameStateManager?.SetState(GameStateManager.GameState.Menu);
+            SceneManager.LoadScene("UI_dev");
+        }
     }
 }

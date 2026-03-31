@@ -1,51 +1,30 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace RPGProject
-{
-    /// <summary>
-    /// Менеджер игры. Управляет состоянием игры и врагами.
-    /// </summary>
-    public class GameManager : MonoBehaviour
-    {
-        [SerializeField] private List<BaseEnemy> _enemies = new List<BaseEnemy>();
+namespace RPGProject {
+    public class GameManager : GameEntrypoint {
+        [NonSerialized] public List<BaseEnemy> enemies;
 
-        public IReadOnlyList<BaseEnemy> Enemies => _enemies;
-
-        private void Awake()
-        {
-            _enemies = new List<BaseEnemy>();
+        void Awake() {
+            enemies = new List<BaseEnemy>();
         }
 
-        public void AddEnemy(BaseEnemy enemy)
-        {
-            if (!_enemies.Contains(enemy))
-            {
-                _enemies.Add(enemy);
-            }
+        public void AddEnemy(BaseEnemy enemy) {
+            if (!enemies.Contains(enemy)) enemies.Add(enemy);
         }
 
-        public void RemoveEnemy(BaseEnemy enemy)
-        {
-            _enemies.Remove(enemy);
+        public void RemoveEnemy(BaseEnemy enemy) {
+            Destroy(enemy.gameObject);
+            enemies.Remove(enemy);
         }
 
-        public void ClearNullEnemies()
-        {
-            for (int i = _enemies.Count - 1; i >= 0; i--)
-            {
-                if (!_enemies[i].IsAlive)
-                {
-                    var enemy = _enemies[i];
-                    _enemies.RemoveAt(i);
-                    Destroy(enemy.gameObject);
-                }
-            }
+        public void ClearNullEnemies() {
+            for (int i = enemies.Count - 1; i >= 0; i--) if (!enemies[i].IsAlive) RemoveEnemy(enemies[i]);
         }
 
-        public bool CheckWin()
-        {
-            return _enemies.Count == 0;
+        public void CheckWin() {
+            if (enemies.Count == 0) Debug.Log("Player Win!");
         }
     }
 }

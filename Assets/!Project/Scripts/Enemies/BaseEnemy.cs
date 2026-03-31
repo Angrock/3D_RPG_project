@@ -2,18 +2,13 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-namespace RPGProject
-{
-    /// <summary>
-    /// Базовый класс врага.
-    /// </summary>
-    public abstract class BaseEnemy : MonoBehaviour
-    {
+namespace RPGProject {
+    public abstract class BaseEnemy : MonoBehaviour {
         [Header("UI")]
-        [SerializeField] protected Slider _sliderHP;
+        [SerializeField] protected Slider sliderHP;
 
-        protected Animator _animator;
-        protected NavMeshAgent _agent;
+        protected Animator animator;
+        protected NavMeshAgent agent;
 
         public float MaxHP { get; protected set; }
         public float CurrentHP { get; protected set; }
@@ -23,135 +18,93 @@ namespace RPGProject
         public float AttackCooldown { get; protected set; }
         public bool IsAlive { get; protected set; }
 
-        private bool _isAttack;
-        private float _timeAttack;
-        private Player _player;
-        private bool _isInitialized;
+        bool isAttack;
+        float timeAttack;
+        Player player;
+        bool isInitialized;
 
-        private void Awake()
-        {
-            if (_isInitialized) return;
-            
-            _animator = GetComponent<Animator>();
-            _agent = GetComponent<NavMeshAgent>();
+        void Awake() {
+            if (isInitialized) return;
+
+            animator = GetComponent<Animator>();
+            agent = GetComponent<NavMeshAgent>();
 
             InitializeValues();
 
-            if (_sliderHP != null)
-            {
-                _sliderHP.maxValue = MaxHP;
-            }
+            if (sliderHP != null) sliderHP.maxValue = MaxHP;
 
             CurrentHP = MaxHP;
             IsAlive = true;
-            _isAttack = false;
-            _timeAttack = 0f;
-            
-            _isInitialized = true;
+            isAttack = false;
+            timeAttack = 0f;
+
+            isInitialized = true;
             Debug.Log($"[BaseEnemy] Awake вызван для {gameObject.name}");
         }
 
-        private void Start()
-        {
-            if (!_isInitialized) Awake();
-            
-            _player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
-            Debug.Log($"[BaseEnemy] Start вызван, Player найден: {_player != null}");
-            
-            // Регистрируем врага в GameManager
-            var gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
+        void Start() {
+            player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
+            Debug.Log($"[BaseEnemy] Start вызван, Player найден: {player != null}");
+
+            GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
             gameManager?.AddEnemy(this);
             Debug.Log($"[BaseEnemy] {gameObject.name}: Зарегистрирован в GameManager");
         }
 
-        private void FixedUpdate()
-        {
+        void FixedUpdate() {
             if (!IsAlive) return;
 
-            if (!_isAttack)
-            {
-                Move();
-            }
+            if (!isAttack) Move();
 
-            _timeAttack += Time.fixedDeltaTime;
-            if (_isAttack && _timeAttack >= AttackCooldown)
-            {
-                _isAttack = false;
-                _agent.isStopped = false;
+            timeAttack += Time.fixedDeltaTime;
+            if (isAttack && timeAttack >= AttackCooldown) {
+                isAttack = false;
+                agent.isStopped = false;
             }
         }
 
-        private void Update()
-        {
-            if (!IsAlive || _player == null) return;
-            transform.LookAt(_player.transform, Vector3.up);
+        void Update() {
+            if (!IsAlive) return;
+            transform.LookAt(player.transform, Vector3.up);
         }
 
-        private void Move()
-        {
-            if (_player == null) return;
+        void Move() {
+            if (Vector3.Distance(transform.position, player.transform.position) < AttackDistance) {
+                agent.SetDestination(transform.position);
+                animator.SetBool("isMove", false);
 
-            float distance = Vector3.Distance(transform.position, _player.transform.position);
-            
-            if (distance < AttackDistance)
-            {
-                // Останавливаемся на дистанции атаки
-                _agent.SetDestination(transform.position);
-                _animator.SetBool("isMove", false);
-                
-                if (!_isAttack)
-                {
-                    Attack();
-                }
+                if (!isAttack) Attack();
             }
-            else
-            {
-                // Идём к игроку
-                _agent.SetDestination(_player.transform.position);
-                _animator.SetBool("isMove", true);
+            else {
+                agent.SetDestination(player.transform.position);
+                animator.SetBool("isMove", true);
             }
         }
 
-        public void Attack()
-        {
-            if (_player == null) return;
-
+        public void Attack() {
             Debug.Log($"[BaseEnemy] Атака игрока! Урон: {Damage}");
-            
-            _player.TakeDamage(Damage);
-            _agent.isStopped = true;
-            
-            if (_animator != null)
-            {
-                _animator.SetTrigger("TriggerAttack");
-                _animator.SetBool("isMove", false);
-            }
-            
-            _isAttack = true;
-            _timeAttack = 0f;
+
+            player.TakeDamage(Damage);
+            agent.isStopped = true;
+
+            animator.SetTrigger("TriggerAttack");
+            animator.SetBool("isMove", false);
+
+            isAttack = true;
+            timeAttack = 0f;
         }
 
-        public void TakeDamage(float damage)
-        {
+        public void TakeDamage(float damage) {
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
-            if (_sliderHP != null)
-            {
-                _sliderHP.value = CurrentHP;
-            }
-
-            if (CurrentHP <= 0)
-            {
-                Death();
-            }
+            sliderHP.value = CurrentHP;
+            if (CurrentHP <= 0) Death();
         }
 
         protected abstract void InitializeValues();
 
-        protected virtual void Death()
-        {
-            Debug.Log("[BaseEnemy] Враг умер");
+        protected virtual void Death() {
+            Debug.Log($"[{gameObject}] Враг умер");
             IsAlive = false;
-            // Враг просто умирает, GameManager больше не нужен
         }
     }
 }

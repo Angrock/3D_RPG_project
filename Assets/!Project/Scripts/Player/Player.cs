@@ -1,12 +1,10 @@
 using UnityEngine;
 
-namespace RPGProject
-{
-    public class Player : GameEntrypoint
-    {
+namespace RPGProject {
+    public class Player : GameEntrypoint {
         [Header("Атаки")]
-        [SerializeField] private AnimationClip _physicAttackClip;
-        [SerializeField] private AnimationClip _mageAttackClip;
+        [SerializeField] AnimationClip physicAttackClip;
+        [SerializeField] AnimationClip mageAttackClip;
 
         [Header("Характеристики")]
         public const float MaxHP = 100f;
@@ -22,32 +20,36 @@ namespace RPGProject
         public float CurrentHP { get; private set; }
         public float CurrentMP { get; private set; }
 
-        public event System.Action<float> OnHPChanged;
-        public event System.Action<float> OnMPChanged;
-        public event System.Action OnDeath;
+        float timer;
+        float currentAttackCooldown;
+        bool isAttack;
 
-        private float _timer;
-        private float _currentAttackCooldown;
-        private bool _isAttack;
+        new Rigidbody rigidbody;
+        Animator animator;
+        
+        GameMenu gameMenu;
+        GameManager gameManager;
+        HUD hud;
 
-        private Rigidbody _rigidbody;
-        private Animator _animator;
-
-        protected override void OnInitialize()
-        {
-            _rigidbody = GetComponent<Rigidbody>();
-            _animator = GetComponent<Animator>();
+        protected override void OnInitialize() {
+            rigidbody = GetComponent<Rigidbody>();
+            animator = GetComponent<Animator>();
 
             CurrentHP = MaxHP;
             CurrentMP = MaxMP;
-            _timer = 0;
-            _currentAttackCooldown = 0;
-            _isAttack = false;
+            timer = 0;
+            currentAttackCooldown = 0;
+            isAttack = false;
         }
 
-        private void FixedUpdate()
-        {
-            if (!_isStarted) return;
+        protected override void OnStart() {
+            gameMenu = EntrypointBootstrapper.Instance.Installer.Resolve<GameMenu>();
+            gameManager = EntrypointBootstrapper.Instance.Installer.Resolve<GameManager>();
+            hud = EntrypointBootstrapper.Instance.Installer.Resolve<HUD>();
+        }
+
+        void FixedUpdate() {
+            if (!isStarted) return;
 
             Move();
             InputAttacks();
@@ -55,148 +57,92 @@ namespace RPGProject
             RecoverMP(1f / 18f);
         }
 
-        private void Update()
-        {
-            if (!_isStarted) return;
-
-            if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
-            {
-                GameMenu.Instance?.SetActiveCursor(!GameMenu.Instance.gameObject.activeSelf);
-                GameMenu.Instance?.gameObject.SetActive(!GameMenu.Instance.gameObject.activeSelf);
-            }
+        void Update() {
+            if (!isStarted) return;
+            if (Input.GetKeyDown(Settings.GameMenuKey) || Input.GetKeyDown(Settings.AltGameMenuKey))
+                gameMenu.SetActive(!gameMenu.gameObject.activeSelf);
         }
 
-        private void InputAttacks()
-        {
-            if (Input.GetKeyDown(Settings.PhysicAttackKey) && !_isAttack)
-                PhysicAttack();
-            else if (Input.GetKeyDown(Settings.MageAttackKey) && !_isAttack)
-                MageAttack();
+        void InputAttacks() {
+            if (Input.GetKeyDown(Settings.PhysicAttackKey) && !isAttack) PhysicAttack();
+            else if (Input.GetKeyDown(Settings.MageAttackKey) && !isAttack) MageAttack();
         }
 
-        private void ChangeTimerAttack()
-        {
-            if (_timer < _currentAttackCooldown)
-            {
-                _timer += Time.fixedDeltaTime;
-            }
-            else if (_timer >= _currentAttackCooldown && _isAttack)
-            {
-                _isAttack = false;
-            }
+        void ChangeTimerAttack() {
+            if (timer < currentAttackCooldown) timer += Time.fixedDeltaTime;
+            else if (timer >= currentAttackCooldown && isAttack) isAttack = false;
         }
 
-        private void Move()
-        {
+        void Move() {
             float runEffect = Input.GetKey(Settings.RunKey) ? 2f : 1f;
             float speedX = (Input.GetKey(Settings.LeftwardKey) ? -Speed : Input.GetKey(Settings.RightwardKey) ? Speed : 0) * runEffect;
             float speedZ = (Input.GetKey(Settings.ForwardKey) ? Speed : Input.GetKey(Settings.BackwardKey) ? -Speed : 0) * runEffect;
             float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
-            _rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, _rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
-            _animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
+            rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
+            animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
         }
 
-        private void PhysicAttack()
-        {
-            if (_physicAttackClip == null)
-            {
-                Debug.LogWarning("[Player] _physicAttackClip не назначен!");
-                return;
-            }
-
+        void PhysicAttack() {
             Debug.Log("Test text phisic attack");
-            _timer = 0;
-            _currentAttackCooldown = _physicAttackClip.length;
-            _isAttack = true;
-            _animator.SetTrigger("TriggerPhisycAttack");
+            timer = 0;
+            currentAttackCooldown = physicAttackClip.length;
+            isAttack = true;
+            animator.SetTrigger("TriggerPhisycAttack");
 
-            // Находим всех врагов на сцене и атакуем
-            var enemies = FindObjectsOfType<BaseEnemy>();
-            foreach (var enemy in enemies)
-            {
-                if (enemy.IsAlive && Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
-                {
+            foreach (BaseEnemy enemy in gameManager.enemies)
+                if (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
                     enemy.TakeDamage(PhysicDamage);
-                }
-            }
+            gameManager.ClearNullEnemies();
+            gameManager.CheckWin();
         }
 
-        private void MageAttack()
-        {
+        void MageAttack() {
             if (CurrentMP < CostSpell) return;
 
-            if (_mageAttackClip == null)
-            {
-                Debug.LogWarning("[Player] _mageAttackClip не назначен!");
-                return;
-            }
-
             SpendMP(CostSpell);
-            HUD.Instance?.SetMageCooldown(0);
+            hud.SetMageCooldown(0);
 
             Debug.Log("Test text mage attack");
-            _timer = 0;
-            _currentAttackCooldown = _mageAttackClip.length;
-            _isAttack = true;
-            _animator.SetTrigger("TriggerMageAttack");
+            timer = 0;
+            currentAttackCooldown = mageAttackClip.length;
+            isAttack = true;
+            animator.SetTrigger("TriggerMageAttack");
 
-            // Находим всех врагов на сцене и атакуем
-            var enemies = FindObjectsOfType<BaseEnemy>();
-            foreach (var enemy in enemies)
-            {
-                if (enemy.IsAlive && Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance)
-                {
+            foreach (BaseEnemy enemy in gameManager.enemies)
+                if (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance) {
+                    Debug.Log(enemy);
                     enemy.TakeDamage(PhysicDamage);
                     break;
                 }
-            }
+            gameManager.ClearNullEnemies();
+            gameManager.CheckWin();
         }
 
-        public void TakeDamage(float damage)
-        {
+        public void TakeDamage(float damage) {
             Debug.Log($"[Player] Получен урон: {damage}, было HP: {CurrentHP}");
-            Debug.Log($"[Player] HUD.Instance = {HUD.Instance != null}");
-            
+
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
-            
+
             Debug.Log($"[Player] Новое HP: {CurrentHP}");
-            
-            OnHPChanged?.Invoke(CurrentHP);
-            
-            if (HUD.Instance != null)
-            {
-                HUD.Instance.SetHP(CurrentHP);
-            }
-            else
-            {
-                Debug.LogWarning("[Player] HUD.Instance = null, не могу обновить HP!");
-            }
 
-            if (CurrentHP <= 0)
-            {
-                Death();
-            }
+            hud.SetHP(CurrentHP);
+
+            if (CurrentHP <= 0) Death();
         }
 
-        public void SpendMP(float amount)
-        {
+        public void SpendMP(float amount) {
             CurrentMP = Mathf.Max(0, CurrentMP - amount);
-            OnMPChanged?.Invoke(CurrentMP);
-            HUD.Instance?.SetMP(CurrentMP);
+            hud.SetMP(CurrentMP);
         }
 
-        public void RecoverMP(float amount)
-        {
+        public void RecoverMP(float amount) {
             CurrentMP = Mathf.Min(CurrentMP + amount, MaxMP);
-            OnMPChanged?.Invoke(CurrentMP);
-            HUD.Instance?.SetMP(CurrentMP);
+            hud.SetMP(CurrentMP);
         }
 
-        private void Death()
-        {
+        void Death() {
             Debug.Log("Test text death player");
-            OnDeath?.Invoke();
-            HUD.Instance?.GameOver();
+            hud.GameOver();
         }
     }
 }

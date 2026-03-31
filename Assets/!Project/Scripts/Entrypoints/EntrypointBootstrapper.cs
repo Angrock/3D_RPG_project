@@ -1,139 +1,101 @@
+using System;
 using UnityEngine;
 
-namespace RPGProject
-{
-    /// <summary>
-    /// Центральный класс управления всеми entrypoint-ами проекта.
-    /// Composition Root - единственная точка входа для всех зависимостей.
-    /// </summary>
-    public class EntrypointBootstrapper : MonoBehaviour
-    {
+namespace RPGProject {
+    public class EntrypointBootstrapper : MonoBehaviour {
         [Header("Настройки")]
-        [SerializeField] private bool _autoInitializeOnAwake = true;
+        [SerializeField] bool autoInitializeOnAwake = true;
 
         [Header("Entrypoints")]
-        [SerializeField] private GameEntrypoint[] _entrypoints;
+        [SerializeField] GameEntrypoint[] entrypoints;
 
-        private static EntrypointBootstrapper _instance;
-        private EntrypointInstaller _installer;
-        private bool _isInitialized;
+        public static EntrypointBootstrapper Instance { get; private set; }
+        public EntrypointInstaller Installer { get; private set; }
+        public bool IsInitialized { get; private set; }
 
-        public static EntrypointBootstrapper Instance => _instance;
-        public EntrypointInstaller Installer => _installer;
-        public bool IsInitialized => _isInitialized;
-
-        private void Awake()
-        {
-            if (_instance != null && _instance != this)
-            {
+        void Awake() {
+            if (Instance != null && Instance != this) {
                 Debug.LogError("[EntrypointBootstrapper] Уже существует другой экземпляр!");
                 Destroy(gameObject);
                 return;
             }
 
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
+            Instance = this;
 
             Debug.Log("[EntrypointBootstrapper] Awake вызван");
 
-            if (_autoInitializeOnAwake)
-            {
-                Initialize();
-            }
+            if (autoInitializeOnAwake) Initialize();
         }
 
-        public void Initialize()
-        {
-            if (_isInitialized)
-            {
+        public void Initialize() {
+            if (IsInitialized) {
                 Debug.LogWarning("[EntrypointBootstrapper] Уже инициализирован!");
                 return;
             }
 
             Debug.Log("[EntrypointBootstrapper] Начало инициализации...");
-            Debug.Log($"[EntrypointBootstrapper] Entrypoints в массиве: {_entrypoints?.Length ?? 0}");
+            Debug.Log($"[EntrypointBootstrapper] Entrypoints в массиве: {entrypoints?.Length ?? 0}");
 
-            _installer = new EntrypointInstaller();
+            Installer = new EntrypointInstaller();
             RegisterNonMonoServices();
 
-            if (_entrypoints != null)
-            {
-                foreach (var entrypoint in _entrypoints)
-                {
-                    if (entrypoint != null)
-                    {
+            if (entrypoints != null) 
+                foreach (GameEntrypoint entrypoint in entrypoints) {
+                    if (entrypoint != null) {
                         Debug.Log($"[EntrypointBootstrapper] Регистрирую: {entrypoint.GetType().Name}");
-                        _installer.RegisterEntrypoint(entrypoint);
+                        Installer.RegisterEntrypoint(entrypoint);
                         RegisterServices(entrypoint);
                     }
-                    else
-                    {
-                        Debug.LogWarning("[EntrypointBootstrapper] Найден null entrypoint!");
-                    }
+                    else Debug.LogWarning("[EntrypointBootstrapper] Найден null entrypoint!");
                 }
-            }
-            else
-            {
-                Debug.LogWarning("[EntrypointBootstrapper] Массив _entrypoints = null!");
-            }
+            else Debug.LogWarning("[EntrypointBootstrapper] Массив entrypoints = null!");
 
             // Сначала инициализируем все entrypoint-ы
             Debug.Log("[EntrypointBootstrapper] Вызов InitializeAll...");
-            _installer.InitializeAll();
+            Installer.InitializeAll();
             // Затем запускаем их
             Debug.Log("[EntrypointBootstrapper] Вызов StartAll...");
-            _installer.StartAll();
+            Installer.StartAll();
 
-            _isInitialized = true;
+            IsInitialized = true;
             Debug.Log("[EntrypointBootstrapper] Инициализация завершена!");
         }
 
-        private void RegisterServices(GameEntrypoint entrypoint)
-        {
-            var type = entrypoint.GetType();
+        void RegisterServices(GameEntrypoint entrypoint) {
+            Type type = entrypoint.GetType();
 
-            if (type == typeof(Player))
-                _installer.Register((Player)entrypoint);
-            else if (type == typeof(HUD))
-                _installer.Register((HUD)entrypoint);
-            else if (type == typeof(GameMenu))
-                _installer.Register((GameMenu)entrypoint);
-            else if (type == typeof(MainMenu))
-                _installer.Register((MainMenu)entrypoint);
-            else if (type == typeof(CameraController))
-                _installer.Register((CameraController)entrypoint);
-            else if (type == typeof(GameStateManager))
-                _installer.Register((GameStateManager)entrypoint);
+            if (type == typeof(Player)) Installer.Register((Player)entrypoint);
+            else if (type == typeof(HUD)) Installer.Register((HUD)entrypoint);
+            else if (type == typeof(GameMenu)) Installer.Register((GameMenu)entrypoint);
+            else if (type == typeof(MainMenu)) Installer.Register((MainMenu)entrypoint);
+            else if (type == typeof(CameraController)) Installer.Register((CameraController)entrypoint);
+            else if (type == typeof(GameStateManager)) Installer.Register((GameStateManager)entrypoint);
+            else if (type == typeof(GameManager)) Installer.Register((GameManager)entrypoint);
         }
 
-        private void RegisterNonMonoServices()
-        {
-            var saveService = new SaveService();
-            _installer.Register<ISaveService>(saveService);
-            _installer.RegisterEntrypoint(saveService);
+        void RegisterNonMonoServices() {
+            SaveService saveService = new SaveService();
+            Installer.Register<ISaveService>(saveService);
+            Installer.RegisterEntrypoint(saveService);
         }
 
-        public void Shutdown()
-        {
-            if (!_isInitialized) return;
+        public void Shutdown() {
+            if (!IsInitialized) return;
 
             Debug.Log("[EntrypointBootstrapper] Остановка всех систем...");
-            _installer?.ShutdownAll();
-            _installer?.Clear();
-            _isInitialized = false;
+            Installer?.ShutdownAll();
+            Installer?.Clear();
+            IsInitialized = false;
         }
 
-        private void OnDestroy()
-        {
-            if (_instance == this)
-            {
+        void OnDestroy() {
+            if (Instance == this) {
                 Shutdown();
-                _instance = null;
+                Instance = null;
             }
         }
 
-        private void OnApplicationQuit()
-        {
+        void OnApplicationQuit() {
             Shutdown();
         }
     }

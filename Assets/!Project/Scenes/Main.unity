@@ -1534,6 +1534,50 @@ Transform:
   - {fileID: 1687681025}
   m_Father: {fileID: 1714531982}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &123127483
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 123127485}
+  - component: {fileID: 123127484}
+  m_Layer: 0
+  m_Name: GameStateManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &123127484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123127483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16fcb677d365cea40a7f9d968da7b060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &123127485
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 123127483}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 13.886825, y: 2.2960887, z: 8.868313}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &131894090
 GameObject:
   m_ObjectHideFlags: 0
@@ -1947,7 +1991,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f29006ccfb9f2be4eb382be729b7dea2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sliderHP: {fileID: 2056135178}
+  sliderHP: {fileID: 1768709678}
 --- !u!1 &200291280
 GameObject:
   m_ObjectHideFlags: 0
@@ -7717,9 +7761,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce75515639d7333478222c6ce4bf62ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sliderHP: {fileID: 1972415194}
-  _sliderMP: {fileID: 371838596}
-  _sliderMageCooldown: {fileID: 91416368}
+  sliderHP: {fileID: 1972415194}
+  sliderMP: {fileID: 371838596}
+  sliderMageCooldown: {fileID: 91416368}
 --- !u!114 &952542300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8713,8 +8757,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 165b878ec865ce74290136f9d80844e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _minVerticalRotation: -5
-  _maxVerticalRotation: 30
+  minVerticalRotation: -5
+  maxVerticalRotation: 30
 --- !u!1 &1079285324
 GameObject:
   m_ObjectHideFlags: 0
@@ -9202,13 +9246,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 50508133833ac6044ad3e1421434febc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _autoInitializeOnAwake: 1
-  _entrypoints:
+  autoInitializeOnAwake: 1
+  entrypoints:
   - {fileID: 5866666021637831326}
   - {fileID: 952542299}
   - {fileID: 1964036088}
   - {fileID: 1065388343}
-  - {fileID: 1065388343}
+  - {fileID: 1449726919}
+  - {fileID: 123127484}
 --- !u!4 &1127218294
 Transform:
   m_ObjectHideFlags: 0
@@ -10118,7 +10163,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d7a06d3e9e9ade4cb1adbe9804304e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sliderHP: {fileID: 2056135178}
+  sliderHP: {fileID: 2056135178}
 --- !u!1 &1271101230
 GameObject:
   m_ObjectHideFlags: 0
@@ -11354,9 +11399,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd90363c9beca4e41b4a36d35414e416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _enemies:
-  - {fileID: 1250715881}
-  - {fileID: 196421639}
 --- !u!4 &1449726920
 Transform:
   m_ObjectHideFlags: 0
@@ -17199,8 +17241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879cdb78b4a1e704f881ad1d916941aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _physicAttackClip: {fileID: 7400000, guid: 96a1cd245e6e28d4ea4f88f03e769ced, type: 2}
-  _mageAttackClip: {fileID: 7400000, guid: 1f4e6ac2a4c1e13438ef43391587d371, type: 2}
+  physicAttackClip: {fileID: 7400000, guid: 96a1cd245e6e28d4ea4f88f03e769ced, type: 2}
+  mageAttackClip: {fileID: 7400000, guid: 1f4e6ac2a4c1e13438ef43391587d371, type: 2}
   <PhysicDamage>k__BackingField: 10
   <MageDamage>k__BackingField: 15
   <AttackPhysicDistance>k__BackingField: 1
@@ -18190,3 +18232,4 @@ SceneRoots:
   - {fileID: 816676649}
   - {fileID: 57751911}
   - {fileID: 1127218294}
+  - {fileID: 123127485}

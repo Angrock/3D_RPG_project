@@ -1,29 +1,15 @@
-using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace RPGProject
-{
-    public class MainMenu : GameEntrypoint
-    {
-        private static MainMenu _instance;
-        public static MainMenu Instance => _instance;
-
-        private void Awake()
-        {
-            _instance = this;
-        }
-
+namespace RPGProject {
+    public class MainMenu : GameEntrypoint {
         public void GameStart() => SceneManager.LoadScene("Main");
 
-        public void GameExit()
-        {
-#if UNITY_EDITOR
+        public void GameExit() {
+        #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
-#else
+        #else
             Application.Quit();
-#endif
+        #endif
         }
-
-        protected override void OnShutdown() => _instance = null;
     }
 }

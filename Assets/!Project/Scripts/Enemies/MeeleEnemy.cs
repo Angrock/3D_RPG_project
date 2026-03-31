@@ -1,12 +1,6 @@
-namespace RPGProject
-{
-    /// <summary>
-    /// Враг ближнего боя.
-    /// </summary>
-    public class MeleeEnemy : BaseEnemy
-    {
-        protected override void InitializeValues()
-        {
+namespace RPGProject {
+    public class MeleeEnemy : BaseEnemy {
+        protected override void InitializeValues() {
             MaxHP = 100f;
             Damage = 5f;
             Speed = 3.4f;

@@ -1,11 +1,5 @@
-namespace RPGProject
-{
-    /// <summary>
-    /// Настройки игры.
-    /// </summary>
-    public static class Settings
-    {
-        // Управление
+namespace RPGProject {
+    public static class Settings {
         public static string ForwardKey = "w";
         public static string LeftwardKey = "a";
         public static string BackwardKey = "s";
@@ -13,12 +7,12 @@ namespace RPGProject
         public static string RunKey = "left shift";
         public static string PhysicAttackKey = "mouse 0";
         public static string MageAttackKey = "mouse 1";
+        public static string GameMenuKey = "escape";
+        public static string AltGameMenuKey = "p";
 
-        // Звук
         public static float MusicVolume = 1f;
         public static float SoundVolume = 1f;
 
-        // Камера
         public static float MouseSensitivityX = 60f;
         public static float MouseSensitivityY = 20f;
     }

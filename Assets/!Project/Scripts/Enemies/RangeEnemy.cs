@@ -1,12 +1,6 @@
-namespace RPGProject
-{
-    /// <summary>
-    /// Враг дальнего боя.
-    /// </summary>
-    public class RangeEnemy : BaseEnemy
-    {
-        protected override void InitializeValues()
-        {
+namespace RPGProject {
+    public class RangeEnemy : BaseEnemy {
+        protected override void InitializeValues() {
             MaxHP = 50f;
             Damage = 12f;
             Speed = 1.2f;
