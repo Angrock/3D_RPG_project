@@ -15,50 +15,28 @@ namespace RPGProject {
 
         void Awake() {
             if (Instance != null && Instance != this) {
-                Debug.LogError("[EntrypointBootstrapper] Уже существует другой экземпляр!");
                 Destroy(gameObject);
                 return;
             }
-
             Instance = this;
-
-            Debug.Log("[EntrypointBootstrapper] Awake вызван");
-
             if (autoInitializeOnAwake) Initialize();
         }
 
         public void Initialize() {
-            if (IsInitialized) {
-                Debug.LogWarning("[EntrypointBootstrapper] Уже инициализирован!");
-                return;
-            }
-
-            Debug.Log("[EntrypointBootstrapper] Начало инициализации...");
-            Debug.Log($"[EntrypointBootstrapper] Entrypoints в массиве: {entrypoints?.Length ?? 0}");
+            if (IsInitialized) return;
 
             Installer = new EntrypointInstaller();
             RegisterNonMonoServices();
 
             if (entrypoints != null) 
-                foreach (GameEntrypoint entrypoint in entrypoints) {
+                foreach (GameEntrypoint entrypoint in entrypoints)
                     if (entrypoint != null) {
-                        Debug.Log($"[EntrypointBootstrapper] Регистрирую: {entrypoint.GetType().Name}");
                         Installer.RegisterEntrypoint(entrypoint);
                         RegisterServices(entrypoint);
                     }
-                    else Debug.LogWarning("[EntrypointBootstrapper] Найден null entrypoint!");
-                }
-            else Debug.LogWarning("[EntrypointBootstrapper] Массив entrypoints = null!");
-
-            // Сначала инициализируем все entrypoint-ы
-            Debug.Log("[EntrypointBootstrapper] Вызов InitializeAll...");
             Installer.InitializeAll();
-            // Затем запускаем их
-            Debug.Log("[EntrypointBootstrapper] Вызов StartAll...");
             Installer.StartAll();
-
             IsInitialized = true;
-            Debug.Log("[EntrypointBootstrapper] Инициализация завершена!");
         }
 
         void RegisterServices(GameEntrypoint entrypoint) {
@@ -75,14 +53,12 @@ namespace RPGProject {
 
         void RegisterNonMonoServices() {
             SaveService saveService = new SaveService();
-            Installer.Register<ISaveService>(saveService);
+            Installer.Register(saveService);
             Installer.RegisterEntrypoint(saveService);
         }
 
         public void Shutdown() {
             if (!IsInitialized) return;
-
-            Debug.Log("[EntrypointBootstrapper] Остановка всех систем...");
             Installer?.ShutdownAll();
             Installer?.Clear();
             IsInitialized = false;

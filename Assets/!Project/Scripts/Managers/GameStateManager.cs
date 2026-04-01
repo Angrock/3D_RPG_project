@@ -13,8 +13,6 @@ namespace RPGProject {
         GameState currentState;
         public GameState CurrentState => currentState;
 
-        public event System.Action<GameState> OnStateChanged;
-
         protected override void OnInitialize() {
             currentState = GameState.Menu;
         }
@@ -28,9 +26,6 @@ namespace RPGProject {
 
             GameState oldState = currentState;
             currentState = newState;
-
-            Debug.Log($"[GameStateManager] Состояние: {oldState} -> {newState}");
-            OnStateChanged?.Invoke(newState);
 
             switch (newState) {
                 case GameState.Menu:

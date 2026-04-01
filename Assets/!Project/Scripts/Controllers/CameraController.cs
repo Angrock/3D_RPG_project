@@ -11,19 +11,15 @@ namespace RPGProject {
 
         protected override void OnInitialize() {
             verticalRotation = transform.localEulerAngles.x;
-            Debug.Log("[CameraController] OnInitialize вызван");
         }
 
         protected override void OnStart() {
             player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
-            Debug.Log($"[CameraController] OnStart вызван, Player найден: {player != null}");
         }
 
-        private void Update() {
-            if (!isStarted) {
-                Debug.LogWarning("[CameraController] isStarted = false");
-                return;
-            }
+        void Update() {
+            if (!isStarted) return;
+            if (!player.IsAlive) return;
 
             verticalRotation -= Input.GetAxis("Mouse Y") * Settings.MouseSensitivityY * Time.deltaTime;
             verticalRotation = Mathf.Clamp(verticalRotation, minVerticalRotation, maxVerticalRotation);

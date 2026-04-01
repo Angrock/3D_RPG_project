@@ -9,7 +9,6 @@ namespace RPGProject {
 
         public void Register<T>(T service) where T : class {
             Type type = typeof(T);
-            if (services.ContainsKey(type)) Debug.LogWarning($"[EntrypointInstaller] Сервис {type.Name} уже зарегистрирован!");
             services[type] = service;
         }
 
@@ -38,11 +37,7 @@ namespace RPGProject {
         }
 
         public void StartAll() {
-            Debug.Log($"[EntrypointInstaller] StartAll: {entrypoints.Count} entrypoint-ов");
-            foreach (IEntrypoint entrypoint in entrypoints) {
-                Debug.Log($"[EntrypointInstaller] Вызов EntrypointStart для {entrypoint.GetType().Name}");
-                entrypoint.EntrypointStart();
-            }
+            foreach (IEntrypoint entrypoint in entrypoints) entrypoint.EntrypointStart();
         }
 
         public void ShutdownAll() {

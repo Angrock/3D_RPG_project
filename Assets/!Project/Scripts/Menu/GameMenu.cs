@@ -19,20 +19,23 @@ namespace RPGProject {
 
         public void SaveGame() {
             Debug.Log("Save Game");
-            ISaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
-            saveService?.SaveGame();
+            SaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<SaveService>();
+            saveService.SaveGame();
         }
 
         public void LoadGame() {
             Debug.Log("Load Game");
-            ISaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<ISaveService>();
-            saveService?.LoadGame();
+            SaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<SaveService>();
+            saveService.LoadGame();
         }
 
         public void ReturnToMainMenu() {
-            GameStateManager gameStateManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameStateManager>();
-            gameStateManager?.SetState(GameStateManager.GameState.Menu);
             SceneManager.LoadScene("UI_dev");
+        }
+
+        public void RestartGame() {
+            Settings.isLoadGame = false;
+            SceneManager.LoadScene("Main");
         }
     }
 }

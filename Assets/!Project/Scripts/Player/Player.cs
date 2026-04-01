@@ -19,6 +19,7 @@ namespace RPGProject {
 
         public float CurrentHP { get; private set; }
         public float CurrentMP { get; private set; }
+        public bool IsAlive { get; private set; }
 
         float timer;
         float currentAttackCooldown;
@@ -40,6 +41,7 @@ namespace RPGProject {
             timer = 0;
             currentAttackCooldown = 0;
             isAttack = false;
+            IsAlive = true;
         }
 
         protected override void OnStart() {
@@ -50,6 +52,7 @@ namespace RPGProject {
 
         void FixedUpdate() {
             if (!isStarted) return;
+            if (!IsAlive) return;
 
             Move();
             InputAttacks();
@@ -59,6 +62,7 @@ namespace RPGProject {
 
         void Update() {
             if (!isStarted) return;
+            if (!IsAlive) return;
             if (Input.GetKeyDown(Settings.GameMenuKey) || Input.GetKeyDown(Settings.AltGameMenuKey))
                 gameMenu.SetActive(!gameMenu.gameObject.activeSelf);
         }
@@ -119,15 +123,14 @@ namespace RPGProject {
         }
 
         public void TakeDamage(float damage) {
-            Debug.Log($"[Player] Получен урон: {damage}, было HP: {CurrentHP}");
-
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
-
-            Debug.Log($"[Player] Новое HP: {CurrentHP}");
-
             hud.SetHP(CurrentHP);
-
             if (CurrentHP <= 0) Death();
+        }
+
+        public void SetNewHP(float newHP) {
+            CurrentHP = Mathf.Clamp(newHP, 0, MaxHP);
+            hud.SetHP(CurrentHP);
         }
 
         public void SpendMP(float amount) {
@@ -140,8 +143,15 @@ namespace RPGProject {
             hud.SetMP(CurrentMP);
         }
 
+        public void SetNewMP(float newMP) {
+            CurrentMP = Mathf.Clamp(newMP, 0, MaxMP);
+            hud.SetMP(CurrentMP);
+        }
+
         void Death() {
             Debug.Log("Test text death player");
+            IsAlive = false;
+            gameManager.RemoveAllEnemies();
             hud.GameOver();
         }
     }

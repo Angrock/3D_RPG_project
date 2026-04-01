@@ -5,46 +5,42 @@ namespace RPGProject {
     public interface ISaveService {
         void SaveGame();
         void LoadGame();
-        bool HasSaveData();
         void DeleteSave();
     }
 
     public class SaveService : ISaveService, IEntrypoint {
-        private const string SaveKey = "SAVE_DATA";
-        private GameData currentData;
-        private bool isInitialized;
+        const string SaveKey = "GameParameters.enfity";
+        bool isInitialized;
 
         public void Initialize() {
             if (isInitialized) return;
-            currentData = new GameData();
             isInitialized = true;
-            Debug.Log("[SaveService] Инициализирован");
+            InternalParams.SetSaveFileName(SaveKey);
         }
 
         public void EntrypointStart() { }
 
         public void Shutdown() {
-            currentData = null;
             isInitialized = false;
         }
 
         public void SaveGame() {
-            if (!isInitialized) {
-                Debug.LogError("[SaveService] Попытка сохранения до инициализации!");
-                return;
-            }
+            if (!isInitialized) return;
 
             Player player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
-            if (player != null) {
-                currentData.playerHP = player.CurrentHP;
-                currentData.playerMP = player.CurrentMP;
-                currentData.playerPosition = player.transform.position;
-            }
+            GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
 
-            string json = JsonUtility.ToJson(currentData, true);
-            PlayerPrefs.SetString(SaveKey, json);
-            PlayerPrefs.Save();
-            Debug.Log("[SaveService] Игра сохранена");
+            InternalParams.SetVector3("PlayerPosition", player.transform.position);
+            InternalParams.SetVector3("PlayerRotation", player.transform.rotation.eulerAngles);
+            InternalParams.SetFloat("PlayerHP", player.CurrentHP);
+            InternalParams.SetFloat("PlayerMP", player.CurrentMP);
+            InternalParams.SetInt("CountEnemies", gameManager.enemies.Count);
+            for (int i = 0; i < gameManager.enemies.Count; i++) {
+                InternalParams.SetString($"Enemy{i}Type", gameManager.enemies[i].type.ToString());
+                InternalParams.SetVector3($"Enemy{i}Position", gameManager.enemies[i].transform.position);
+                InternalParams.SetVector3($"Enemy{i}Rotation", gameManager.enemies[i].transform.rotation.eulerAngles);
+                InternalParams.SetFloat($"Enemy{i}HP", gameManager.enemies[i].CurrentHP);
+            }
         }
 
         public void LoadGame() {
@@ -53,32 +49,25 @@ namespace RPGProject {
                 return;
             }
 
-            if (!PlayerPrefs.HasKey(SaveKey)) {
-                Debug.LogWarning("[SaveService] Нет данных для загрузки");
-                return;
-            }
-
-            string json = PlayerPrefs.GetString(SaveKey);
-            currentData = JsonUtility.FromJson<GameData>(json);
-
             Player player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
-            if (player != null) player.transform.position = currentData.playerPosition;
+            GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
 
-            Debug.Log("[SaveService] Игра загружена");
+            player.transform.SetPositionAndRotation(InternalParams.GetVector3("PlayerPosition"),
+            Quaternion.Euler(InternalParams.GetVector3("PlayerRotation")));
+            player.SetNewHP(InternalParams.GetFloat("PlayerHP"));
+            player.SetNewMP(InternalParams.GetFloat("PlayerMP"));
+            int countEnemies = InternalParams.GetInt("CountEnemies");
+            for (int i = 0; i < countEnemies; i++) gameManager.CreateEnemy(
+                (GameManager.EnemiesTypes)Enum.Parse(
+                    typeof(GameManager.EnemiesTypes), InternalParams.GetString($"Enemy{i}Type")),
+                InternalParams.GetVector3($"Enemy{i}Position"),
+                InternalParams.GetVector3($"Enemy{i}Rotation"),
+                InternalParams.GetFloat($"Enemy{i}HP"));
         }
-
-        public bool HasSaveData() => PlayerPrefs.HasKey(SaveKey);
 
         public void DeleteSave() {
-            PlayerPrefs.DeleteKey(SaveKey);
+            InternalParams.DeleteAll();
             Debug.Log("[SaveService] Сохранение удалено");
         }
-    }
-
-    [Serializable]
-    public class GameData {
-        public float playerHP;
-        public float playerMP;
-        public Vector3 playerPosition;
     }
 }

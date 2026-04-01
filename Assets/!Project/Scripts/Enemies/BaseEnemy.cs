@@ -17,6 +17,7 @@ namespace RPGProject {
         public float AttackDistance { get; protected set; }
         public float AttackCooldown { get; protected set; }
         public bool IsAlive { get; protected set; }
+        public virtual GameManager.EnemiesTypes type { get; protected set; }
 
         bool isAttack;
         float timeAttack;
@@ -39,16 +40,13 @@ namespace RPGProject {
             timeAttack = 0f;
 
             isInitialized = true;
-            Debug.Log($"[BaseEnemy] Awake вызван для {gameObject.name}");
         }
 
         void Start() {
             player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
-            Debug.Log($"[BaseEnemy] Start вызван, Player найден: {player != null}");
 
             GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
-            gameManager?.AddEnemy(this);
-            Debug.Log($"[BaseEnemy] {gameObject.name}: Зарегистрирован в GameManager");
+            gameManager.AddEnemy(this);
         }
 
         void FixedUpdate() {
@@ -82,10 +80,7 @@ namespace RPGProject {
         }
 
         public void Attack() {
-            Debug.Log($"[BaseEnemy] Атака игрока! Урон: {Damage}");
-
             player.TakeDamage(Damage);
-            agent.isStopped = true;
 
             animator.SetTrigger("TriggerAttack");
             animator.SetBool("isMove", false);
@@ -98,6 +93,11 @@ namespace RPGProject {
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             sliderHP.value = CurrentHP;
             if (CurrentHP <= 0) Death();
+        }
+
+        public void SetNewHP(float newHP) {
+            CurrentHP = Mathf.Clamp(newHP, 0, MaxHP);
+            sliderHP.value = CurrentHP;
         }
 
         protected abstract void InitializeValues();

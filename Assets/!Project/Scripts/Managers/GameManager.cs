@@ -5,9 +5,16 @@ using UnityEngine;
 namespace RPGProject {
     public class GameManager : GameEntrypoint {
         [NonSerialized] public List<BaseEnemy> enemies;
+        public List<GameObject> enemyPrefabs;
 
-        void Awake() {
+        protected override void OnInitialize() {
             enemies = new List<BaseEnemy>();
+        }
+
+        protected override void OnStart() {
+            if (!Settings.isLoadGame) return;
+            SaveService saveService = EntrypointBootstrapper.Instance?.Installer?.Resolve<SaveService>();
+            saveService.LoadGame();
         }
 
         public void AddEnemy(BaseEnemy enemy) {
@@ -19,12 +26,34 @@ namespace RPGProject {
             enemies.Remove(enemy);
         }
 
+        public void CreateEnemy(EnemiesTypes typeEnemy, Vector3 position, Vector3 rotation, float newHP) {
+            if (typeEnemy == EnemiesTypes.Base) return;
+            GameObject enemyPrefab = null;
+            foreach (GameObject prefab in enemyPrefabs)
+                if (prefab.GetComponent<BaseEnemy>().name == "Enemy" + typeEnemy) {
+                    Debug.Log(typeEnemy);
+                    enemyPrefab = prefab;
+                    break;
+                }
+            Instantiate(enemyPrefab, position, Quaternion.Euler(rotation)).GetComponent<BaseEnemy>().SetNewHP(newHP);
+        }
+
         public void ClearNullEnemies() {
             for (int i = enemies.Count - 1; i >= 0; i--) if (!enemies[i].IsAlive) RemoveEnemy(enemies[i]);
         }
 
+        public void RemoveAllEnemies() {
+            for (int i = enemies.Count - 1; i >= 0; i--) RemoveEnemy(enemies[i]);
+        }
+
         public void CheckWin() {
             if (enemies.Count == 0) Debug.Log("Player Win!");
+        }
+
+        public enum EnemiesTypes {
+            Base,
+            Meele,
+            Range
         }
     }
 }

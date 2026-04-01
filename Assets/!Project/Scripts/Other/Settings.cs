@@ -15,5 +15,7 @@ namespace RPGProject {
 
         public static float MouseSensitivityX = 60f;
         public static float MouseSensitivityY = 20f;
+
+        public static bool isLoadGame = false;
     }
 }
