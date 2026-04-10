@@ -4852,6 +4852,7 @@ MonoBehaviour:
   sliderHP: {fileID: 1972415194}
   sliderMP: {fileID: 371838596}
   sliderMageCooldown: {fileID: 91416368}
+  scoresText: {fileID: 1230348561}
   gameOverPannel: {fileID: 1698801771}
 --- !u!114 &952542300
 MonoBehaviour:
@@ -6439,7 +6440,7 @@ GameObject:
   - component: {fileID: 1230348562}
   - component: {fileID: 1230348561}
   m_Layer: 5
-  m_Name: ScoreText
+  m_Name: ScoresText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6484,7 +6485,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "\u041E\u0447\u043A\u0438: "
+  m_text: "\u041E\u0447\u043A\u0438: 0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4ecd8e48b1aa7d846925ea2302225e87, type: 2}
   m_sharedMaterial: {fileID: -3116194087188584185, guid: 4ecd8e48b1aa7d846925ea2302225e87, type: 2}
@@ -7445,6 +7446,7 @@ MonoBehaviour:
   - {fileID: 244641045342902430, guid: 49af8d225d8840b47a09db69fa8f82e1, type: 3}
   BossPrefabs:
   - {fileID: 2930482178675676866, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+  Scores: 0
 --- !u!4 &1449726920
 Transform:
   m_ObjectHideFlags: 0

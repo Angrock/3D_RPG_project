@@ -228,6 +228,8 @@ namespace RPGProject
 
             // Отключаем коллайдер, чтобы не мешал
             boss.GetComponent<Collider>().enabled = false;
+
+            boss.gameManager.Scores += Constants.BossKillScore;
         }
 
         public override void Update()

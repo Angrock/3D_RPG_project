@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -18,16 +19,20 @@ namespace RPGProject
         public float strongDamage = 5f;
         public float strongAttackChance = 25f;
 
-        public Player player;
+        [NonSerialized] public Player player;
         public BossStateMachine stateMachine;
+
+        public GameManager gameManager;
 
         void Start()
         {
             stateMachine = new BossStateMachine(this);
             stateMachine.ChangeState(new IdleState());
 
-            GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
+            gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
             gameManager.AddBoss(this);
+
+            player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
 
             if (sliderHP != null)
             {

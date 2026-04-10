@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ namespace RPGProject {
         [SerializeField] Slider sliderHP;
         [SerializeField] Slider sliderMP;
         [SerializeField] Slider sliderMageCooldown;
+        [SerializeField] private TextMeshProUGUI scoresText;
         
         [SerializeField] GameObject gameOverPannel;
 
@@ -20,6 +22,8 @@ namespace RPGProject {
             sliderMP.value = Player.MaxMP;
             
             sliderMageCooldown.maxValue = 1f;
+
+            SetScoresText(0);
 
             gameMenu = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameMenu>();
         }
@@ -39,6 +43,11 @@ namespace RPGProject {
 
         public void SetMageCooldown(float value) {
             if (sliderMageCooldown != null) sliderMageCooldown.value = value;
+        }
+
+        public void SetScoresText(int newScore)
+        {
+            scoresText.text = $"Очки: {newScore}";
         }
 
         public void GameWin() => Debug.Log("Test text game win");

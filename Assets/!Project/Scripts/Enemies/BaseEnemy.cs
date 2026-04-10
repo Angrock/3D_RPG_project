@@ -23,6 +23,7 @@ namespace RPGProject {
         float timeAttack;
         Player player;
         bool isInitialized;
+        public GameManager gameManager;
 
         void Awake() {
             if (isInitialized) return;
@@ -45,7 +46,7 @@ namespace RPGProject {
         void Start() {
             player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
 
-            GameManager gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
+            gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
             gameManager.AddEnemy(this);
         }
 
@@ -109,6 +110,7 @@ namespace RPGProject {
         protected abstract void InitializeValues();
 
         protected virtual void Death() {
+            gameManager.Scores += Constants.EnemyKillScore;
             animator.SetTrigger("isDeath");
             IsAlive = false;
         }

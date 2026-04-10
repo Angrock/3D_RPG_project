@@ -11,9 +11,23 @@ namespace RPGProject {
         public List<GameObject> BossPrefabs;
         [NonSerialized] public List<BossController> Bosses;
 
+        private HUD hud;
+
+        private int scores = 0;
+        public int Scores
+        {
+            get => scores;
+            set
+            {
+                scores = value;
+                hud.SetScoresText(scores);
+            }
+        }
+
         protected override void OnInitialize() {
             enemies = new List<BaseEnemy>();
             Bosses = new List<BossController>();
+            hud = EntrypointBootstrapper.Instance.Installer.Resolve<HUD>();
         }
 
         protected override void OnStart() {

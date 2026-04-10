@@ -93,8 +93,13 @@ namespace RPGProject {
             animator.SetTrigger("TriggerPhisycAttack");
 
             foreach (BaseEnemy enemy in gameManager.enemies)
+            {
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
+                {
                     enemy.TakeDamage(PhysicDamage);
+                    gameManager.Scores += Constants.EnemyDamageScore;
+                }
+            }
 
             if (gameManager.Bosses.Count > 0)
             {
@@ -103,6 +108,7 @@ namespace RPGProject {
                     if (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance)
                     {
                         boss.TakeDamage(PhysicDamage);
+                        gameManager.Scores += Constants.BossDamageScore;
                     }
                 }
             }
@@ -125,6 +131,7 @@ namespace RPGProject {
             foreach (BaseEnemy enemy in gameManager.enemies)
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance) {
                     enemy.TakeDamage(MageDamage);
+                    gameManager.Scores += Constants.EnemyDamageScore;
                     break;
                 }
 
@@ -135,6 +142,7 @@ namespace RPGProject {
                     if (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance)
                     {
                         boss.TakeDamage(MageDamage);
+                        gameManager.Scores += Constants.BossDamageScore;
                         break;
                     }
                 }
