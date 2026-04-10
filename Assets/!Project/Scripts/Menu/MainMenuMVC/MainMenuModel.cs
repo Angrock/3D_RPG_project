@@ -4,11 +4,13 @@ namespace RPGProject
     {
         public void NewGame()
         {
+            Settings.IsPeacefulGame = false;
             Settings.isLoadGame = false;
         }
 
         public void LoadGame()
         {
+            Settings.IsPeacefulGame = false;
             Settings.isLoadGame = true;
         }
 

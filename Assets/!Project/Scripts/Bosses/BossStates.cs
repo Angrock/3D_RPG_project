@@ -20,7 +20,8 @@ namespace RPGProject
             // Если увидел игрока - сразу в Attack
             if (boss.CanSeePlayer())
             {
-                boss.stateMachine.ChangeState(new AttackState());
+                if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
+                    boss.stateMachine.ChangeState(new AttackState());
             }
 
             idleTimer += Time.deltaTime;
@@ -34,7 +35,8 @@ namespace RPGProject
 
         public override void OnSeePlayer()
         {
-            boss.stateMachine.ChangeState(new AttackState());
+            if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
+                boss.stateMachine.ChangeState(new AttackState());
         }
 
         public override void Exit()
@@ -77,13 +79,15 @@ namespace RPGProject
             // Увидел игрока - атаковать
             if (boss.CanSeePlayer())
             {
-                boss.stateMachine.ChangeState(new AttackState());
+                if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
+                    boss.stateMachine.ChangeState(new AttackState());
             }
         }
 
         public override void OnSeePlayer()
         {
-            boss.stateMachine.ChangeState(new AttackState());
+            if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
+                boss.stateMachine.ChangeState(new AttackState());
         }
     }
 
@@ -103,7 +107,7 @@ namespace RPGProject
             boss.animator.SetTrigger("Attack");
             isStrongAttackNext = (Random.Range(0, 101) < boss.strongAttackChance) ? true : false;
 
-            Debug.Log($"isStrongAttackNext = {isStrongAttackNext}");
+            //Debug.Log($"isStrongAttackNext = {isStrongAttackNext}");
         }
 
         public override void Update()
@@ -162,7 +166,7 @@ namespace RPGProject
             boss.navMeshAgent.isStopped = true;
             boss.animator.SetBool("isStrongAttack", true);
 
-            Debug.Log($"StrongAttackState: enter");
+            //Debug.Log($"StrongAttackState: enter");
         }
 
         public override void Update()
@@ -174,7 +178,7 @@ namespace RPGProject
             // Атака с задержкой
             if (!hasAttacked && attackCooldown >= attackDelay * 0.5f)
             {
-                Debug.Log($"StrongAttackState: update, strong attack");
+                //Debug.Log($"StrongAttackState: update, strong attack");
                 hasAttacked = true;
                 boss.StrongAttackPlayer();
             }

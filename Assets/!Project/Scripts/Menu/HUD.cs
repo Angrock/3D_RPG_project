@@ -9,7 +9,6 @@ namespace RPGProject {
         [SerializeField] Slider sliderMP;
         [SerializeField] Slider sliderMageCooldown;
         [SerializeField] private TextMeshProUGUI scoresText;
-        
         [SerializeField] GameObject gameOverPannel;
 
         GameMenu gameMenu;
@@ -23,7 +22,10 @@ namespace RPGProject {
             
             sliderMageCooldown.maxValue = 1f;
 
-            SetScoresText(0);
+            if (!Settings.IsPeacefulGame)
+                SetScoresText(0);
+            else
+                scoresText.color = new Color(0, 0, 0, 0);
 
             gameMenu = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameMenu>();
         }

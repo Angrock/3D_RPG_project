@@ -7,7 +7,7 @@ namespace RPGProject
 {
     public class BossController : MonoBehaviour
     {
-        [SerializeField] protected Slider sliderHP;
+        [SerializeField] private Slider sliderHP;
 
         public Animator animator;
         public NavMeshAgent navMeshAgent;
@@ -19,10 +19,10 @@ namespace RPGProject
         public float strongDamage = 5f;
         public float strongAttackChance = 25f;
 
+        [NonSerialized] public bool isAgressive = false;
         [NonSerialized] public Player player;
+        [NonSerialized] public GameManager gameManager;
         public BossStateMachine stateMachine;
-
-        public GameManager gameManager;
 
         void Start()
         {
@@ -67,13 +67,13 @@ namespace RPGProject
 
         public void AttackPlayer()
         {
-            Debug.Log($"AttackPlayer");
+            //Debug.Log($"AttackPlayer");
             player.TakeDamage(damage);
         }
 
         public void StrongAttackPlayer()
         {
-            Debug.Log($"         StrongAttackPlayer");
+            //Debug.Log($"         StrongAttackPlayer");
             player.TakeDamage(strongDamage);
         }
 
@@ -81,6 +81,9 @@ namespace RPGProject
         {
             health = Mathf.Max(0, health - damageAmount);
             sliderHP.value = health;
+
+            if (!isAgressive)
+                isAgressive = true;
 
             if (health <= 0)
                 stateMachine.ChangeState(new DeathState());

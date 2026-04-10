@@ -3,8 +3,19 @@ using UnityEngine.SceneManagement;
 
 namespace RPGProject {
     public class GameMenu : GameEntrypoint {
+        [SerializeField] private GameObject[] notPeacefulButtons;
+
         protected override void OnInitialize() {
             SetActive(false);
+        }
+
+        protected override void OnStart()
+        {
+            if (Settings.IsPeacefulGame)
+            {
+                for (int i = 0; i < notPeacefulButtons.Length; i++)
+                    notPeacefulButtons[i].SetActive(false);
+            }
         }
 
         public void SetActive(bool isActive) {
