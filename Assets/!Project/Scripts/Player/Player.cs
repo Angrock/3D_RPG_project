@@ -2,6 +2,10 @@ using UnityEngine;
 
 namespace RPGProject {
     public class Player : GameEntrypoint {
+        [Header("Weapons")]
+        [SerializeField] private GameObject sword;
+        [SerializeField] private GameObject bow;
+
         [Header("Характеристики")]
         public const float MaxHP = 100f;
         public const float MaxMP = 100f;
@@ -91,6 +95,7 @@ namespace RPGProject {
             isAttack = true;
             currentAttackCooldown = PhysicAttackCooldown;
             animator.SetTrigger("TriggerPhisycAttack");
+            SwapWeapons(true);
 
             foreach (BaseEnemy enemy in gameManager.enemies)
             {
@@ -124,6 +129,7 @@ namespace RPGProject {
             isAttack = true;
             currentAttackCooldown = MageAttackCooldown;
             animator.SetTrigger("TriggerMageAttack");
+            SwapWeapons(false);
 
             SpendMP(CostSpell);
             hud.SetMageCooldown(0);
@@ -176,6 +182,12 @@ namespace RPGProject {
         public void SetNewMP(float newMP) {
             CurrentMP = Mathf.Clamp(newMP, 0, MaxMP);
             hud.SetMP(CurrentMP);
+        }
+
+        public void SwapWeapons(bool isSword)
+        {
+            sword.SetActive(isSword);
+            bow.SetActive(!isSword);
         }
 
         void Death() {
