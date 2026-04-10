@@ -90,8 +90,9 @@ namespace RPGProject
     public class AttackState : BossState
     {
         private float attackCooldown;
-        private float attackDelay = 1f;
+        private float attackDelay = 2f;
         private bool hasAttacked;
+        private bool isStrongAttackNext;
 
         public override void Enter(BossController boss)
         {
@@ -100,6 +101,9 @@ namespace RPGProject
             hasAttacked = false;
             boss.navMeshAgent.isStopped = true;
             boss.animator.SetTrigger("Attack");
+            isStrongAttackNext = (Random.Range(0, 101) < boss.strongAttackChance) ? true : false;
+
+            Debug.Log($"isStrongAttackNext = {isStrongAttackNext}");
         }
 
         public override void Update()
@@ -120,6 +124,68 @@ namespace RPGProject
                 if (boss.CanSeePlayer() && boss.IsInAttackRange())
                 {
                     // Повторная атака
+                    if (isStrongAttackNext)
+                        boss.stateMachine.ChangeState(new StrongAttackState());
+                    else
+                        boss.stateMachine.ChangeState(new AttackState());
+                }
+                else if (boss.CanSeePlayer() && !boss.IsInAttackRange())
+                {
+                    // Подойти ближе
+                    boss.stateMachine.ChangeState(new WalkState());
+                }
+                else
+                {
+                    // Потерял игрока
+                    boss.stateMachine.ChangeState(new IdleState());
+                }
+            }
+        }
+
+        public override void OnLosePlayer()
+        {
+            boss.stateMachine.ChangeState(new IdleState());
+        }
+    }
+
+    public class StrongAttackState : BossState
+    {
+        private float attackCooldown;
+        private float attackDelay = 2f;
+        private bool hasAttacked;
+
+        public override void Enter(BossController boss)
+        {
+            base.Enter(boss);
+            attackCooldown = 0;
+            hasAttacked = false;
+            boss.navMeshAgent.isStopped = true;
+            boss.animator.SetBool("isStrongAttack", true);
+
+            Debug.Log($"StrongAttackState: enter");
+        }
+
+        public override void Update()
+        {
+            //Debug.Log($"StrongAttackState: update");
+            attackCooldown += Time.deltaTime;
+            boss.transform.LookAt(boss.player.transform, Vector3.up);
+
+            // Атака с задержкой
+            if (!hasAttacked && attackCooldown >= attackDelay * 0.5f)
+            {
+                Debug.Log($"StrongAttackState: update, strong attack");
+                hasAttacked = true;
+                boss.StrongAttackPlayer();
+            }
+
+            // После анимации атаки проверяем дистанцию
+            if (attackCooldown >= attackDelay)
+            {
+                if (boss.CanSeePlayer() && boss.IsInAttackRange())
+                {
+                    Debug.Log($"StrongAttackState: update, switch to ordinary attack");
+                    // Обычная атака
                     boss.stateMachine.ChangeState(new AttackState());
                 }
                 else if (boss.CanSeePlayer() && !boss.IsInAttackRange())
@@ -138,6 +204,12 @@ namespace RPGProject
         public override void OnLosePlayer()
         {
             boss.stateMachine.ChangeState(new IdleState());
+        }
+
+        public override void Exit()
+        {
+            base.Exit();
+            boss.animator.SetBool("isStrongAttack", false);
         }
     }
 

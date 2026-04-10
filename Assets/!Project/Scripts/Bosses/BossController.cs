@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
-using static Codice.CM.Common.CmCallContext;
 
 namespace RPGProject
 {
@@ -11,11 +10,13 @@ namespace RPGProject
 
         public Animator animator;
         public NavMeshAgent navMeshAgent;
-        public float viewDistance = 3.0f;
-        public float attackRange = 4.5f; // attackRange is always must be higher than viewDistance !
+        public float viewDistance = 3f;
+        public float attackRange = 4f; // attackRange is always must be higher than viewDistance !
         public float patrolRadius = 15f;
-        public float health = 500.0f;
-        public float damage = 5.0f;
+        public float health = 500f;
+        public float damage = 2.75f;
+        public float strongDamage = 5f;
+        public float strongAttackChance = 25f;
 
         public Player player;
         public BossStateMachine stateMachine;
@@ -61,7 +62,14 @@ namespace RPGProject
 
         public void AttackPlayer()
         {
+            Debug.Log($"AttackPlayer");
             player.TakeDamage(damage);
+        }
+
+        public void StrongAttackPlayer()
+        {
+            Debug.Log($"         StrongAttackPlayer");
+            player.TakeDamage(strongDamage);
         }
 
         public void TakeDamage(float damageAmount)
