@@ -11991,13 +11991,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 879cdb78b4a1e704f881ad1d916941aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  physicAttackClip: {fileID: 7400000, guid: 96a1cd245e6e28d4ea4f88f03e769ced, type: 2}
-  mageAttackClip: {fileID: 7400000, guid: 1f4e6ac2a4c1e13438ef43391587d371, type: 2}
   <PhysicDamage>k__BackingField: 10
   <MageDamage>k__BackingField: 15
   <AttackPhysicDistance>k__BackingField: 1
   <AttackMageDistance>k__BackingField: 8
   <CostSpell>k__BackingField: 20
+  <MageAttackCooldown>k__BackingField: 3
+  <PhysicAttackCooldown>k__BackingField: 2
+  <IsGodMode>k__BackingField: 1
 --- !u!54 &5866666021637831327
 Rigidbody:
   m_ObjectHideFlags: 0

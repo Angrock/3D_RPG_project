@@ -80,6 +80,9 @@ namespace RPGProject {
         }
 
         public void Attack() {
+            if (!IsAlive)
+                return;
+
             player.TakeDamage(Damage);
 
             animator.SetTrigger("TriggerAttack");
@@ -90,6 +93,9 @@ namespace RPGProject {
         }
 
         public void TakeDamage(float damage) {
+            if (!IsAlive)
+                return;
+
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             sliderHP.value = CurrentHP;
             if (CurrentHP <= 0) Death();
@@ -103,7 +109,7 @@ namespace RPGProject {
         protected abstract void InitializeValues();
 
         protected virtual void Death() {
-            Debug.Log($"[{gameObject}] Враг умер");
+            animator.SetTrigger("isDeath");
             IsAlive = false;
         }
     }

@@ -2,20 +2,20 @@ using UnityEngine;
 
 namespace RPGProject {
     public class Player : GameEntrypoint {
-        [Header("Атаки")]
-        [SerializeField] AnimationClip physicAttackClip;
-        [SerializeField] AnimationClip mageAttackClip;
-
         [Header("Характеристики")]
         public const float MaxHP = 100f;
         public const float MaxMP = 100f;
         public const float Speed = 3.0f;
 
-        [field: SerializeField] public float PhysicDamage { get; private set; } = 10f;
-        [field: SerializeField] public float MageDamage { get; private set; } = 15f;
+        [field: SerializeField] public float PhysicDamage { get; private set; } = 15f;
+        [field: SerializeField] public float MageDamage { get; private set; } = 21f;
         [field: SerializeField] public float AttackPhysicDistance { get; private set; } = 1f;
         [field: SerializeField] public float AttackMageDistance { get; private set; } = 8f;
         [field: SerializeField] public float CostSpell { get; private set; } = 20f;
+        [field: SerializeField] public float MageAttackCooldown { get; private set; } = 3.0f;
+        [field: SerializeField] public float PhysicAttackCooldown { get; private set; } = 2.0f;
+
+        [field: SerializeField] public bool IsGodMode { get; private set; } = false;
 
         public float CurrentHP { get; private set; }
         public float CurrentMP { get; private set; }
@@ -36,7 +36,7 @@ namespace RPGProject {
             rigidbody = GetComponent<Rigidbody>();
             animator = GetComponent<Animator>();
 
-            CurrentHP = MaxHP;
+            CurrentHP = (!IsGodMode) ? MaxHP : 9999999.0f;
             CurrentMP = MaxMP;
             timer = 0;
             currentAttackCooldown = 0;
@@ -87,15 +87,15 @@ namespace RPGProject {
         }
 
         void PhysicAttack() {
-            Debug.Log("Test text phisic attack");
             timer = 0;
-            currentAttackCooldown = physicAttackClip.length;
             isAttack = true;
+            currentAttackCooldown = PhysicAttackCooldown;
             animator.SetTrigger("TriggerPhisycAttack");
 
             foreach (BaseEnemy enemy in gameManager.enemies)
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
                     enemy.TakeDamage(PhysicDamage);
+
             gameManager.ClearNullEnemies();
             gameManager.CheckWin();
         }
@@ -103,14 +103,13 @@ namespace RPGProject {
         void MageAttack() {
             if (CurrentMP < CostSpell) return;
 
+            timer = 0;
+            isAttack = true;
+            currentAttackCooldown = MageAttackCooldown;
+            animator.SetTrigger("TriggerMageAttack");
+
             SpendMP(CostSpell);
             hud.SetMageCooldown(0);
-
-            Debug.Log("Test text mage attack");
-            timer = 0;
-            currentAttackCooldown = mageAttackClip.length;
-            isAttack = true;
-            animator.SetTrigger("TriggerMageAttack");
 
             foreach (BaseEnemy enemy in gameManager.enemies)
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance) {
@@ -118,6 +117,7 @@ namespace RPGProject {
                     enemy.TakeDamage(PhysicDamage);
                     break;
                 }
+
             gameManager.ClearNullEnemies();
             gameManager.CheckWin();
         }
@@ -149,7 +149,7 @@ namespace RPGProject {
         }
 
         void Death() {
-            Debug.Log("Test text death player");
+            //Debug.Log("Test text death player");
             IsAlive = false;
             gameManager.RemoveAllEnemies();
             hud.GameOver();

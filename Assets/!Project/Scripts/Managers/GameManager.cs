@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,7 +40,11 @@ namespace RPGProject {
         }
 
         public void ClearNullEnemies() {
-            for (int i = enemies.Count - 1; i >= 0; i--) if (!enemies[i].IsAlive) RemoveEnemy(enemies[i]);
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            {
+                if (!enemies[i].IsAlive)
+                    StartCoroutine(RemoveEnemyWithDelay(enemies[i]));
+            }
         }
 
         public void RemoveAllEnemies() {
@@ -54,6 +59,22 @@ namespace RPGProject {
             Base,
             Meele,
             Range
+        }
+
+        private IEnumerator RemoveEnemyWithDelay(BaseEnemy enemy)
+        {
+            yield return new WaitForSeconds(5.0f);
+
+            try
+            {
+                RemoveEnemy(enemy);
+            }
+            catch (MissingReferenceException exception)
+            {
+                Debug.LogWarning($"GameManager.RemoveEnemyWithDelay: you are trying to remove already removed enemy: {exception.Message}");
+            }
+
+            yield break;
         }
     }
 }
