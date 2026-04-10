@@ -29,6 +29,13 @@ namespace RPGProject
             SceneManager.LoadScene(Constants.MainGameSceneName);
         }
 
+        public void OnPeacefulGame()
+        {
+            //view.PlayButtonClickSound();
+            model.PeacefulGame();
+            SceneManager.LoadScene(Constants.MainGameSceneName);
+        }
+
         public void OnGameQuit()
         {
             //view.PlayButtonClickSound();

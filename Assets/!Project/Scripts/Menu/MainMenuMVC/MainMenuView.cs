@@ -10,6 +10,7 @@ namespace RPGProject
         [Header("Buttons")]
         [SerializeField] private Button newGameButton;
         [SerializeField] private Button loadGameButton;
+        [SerializeField] private Button peacefulGameButton;
         [SerializeField] private Button settingsButton;
         [SerializeField] private Button quitButton;
         [SerializeField] private Button backFromSettingsButton;
@@ -46,6 +47,9 @@ namespace RPGProject
 
             loadGameButton.onClick.AddListener(() => controller.OnLoadGame());
             AddPointerEvents(loadGameButton.gameObject, loadGameButton.transform.GetComponentInChildren<TextMeshProUGUI>());
+
+            peacefulGameButton.onClick.AddListener(() => controller.OnPeacefulGame());
+            AddPointerEvents(peacefulGameButton.gameObject, peacefulGameButton.transform.GetComponentInChildren<TextMeshProUGUI>());
 
             settingsButton.onClick.AddListener(() => controller.OnOpenSettings());
             AddPointerEvents(settingsButton.gameObject, settingsButton.transform.GetComponentInChildren<TextMeshProUGUI>());

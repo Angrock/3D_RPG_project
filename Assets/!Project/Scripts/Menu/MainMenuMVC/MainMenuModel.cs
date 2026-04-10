@@ -11,5 +11,10 @@ namespace RPGProject
         {
             Settings.isLoadGame = true;
         }
+
+        public void PeacefulGame()
+        {
+            Settings.IsPeacefulGame = true;
+        }
     }
 }
