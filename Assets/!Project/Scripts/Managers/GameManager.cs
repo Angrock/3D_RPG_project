@@ -5,11 +5,15 @@ using UnityEngine;
 
 namespace RPGProject {
     public class GameManager : GameEntrypoint {
-        [NonSerialized] public List<BaseEnemy> enemies;
         public List<GameObject> enemyPrefabs;
+        [NonSerialized] public List<BaseEnemy> enemies;
+
+        public List<GameObject> BossPrefabs;
+        [NonSerialized] public List<BossController> Bosses;
 
         protected override void OnInitialize() {
             enemies = new List<BaseEnemy>();
+            Bosses = new List<BossController>();
         }
 
         protected override void OnStart() {
@@ -49,6 +53,12 @@ namespace RPGProject {
 
         public void RemoveAllEnemies() {
             for (int i = enemies.Count - 1; i >= 0; i--) RemoveEnemy(enemies[i]);
+        }
+
+        public void AddBoss(BossController boss)
+        {
+            if (!Bosses.Contains(boss))
+                Bosses.Add(boss);
         }
 
         public void CheckWin() {

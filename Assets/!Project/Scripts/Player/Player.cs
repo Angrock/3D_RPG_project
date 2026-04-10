@@ -9,7 +9,7 @@ namespace RPGProject {
 
         [field: SerializeField] public float PhysicDamage { get; private set; } = 15f;
         [field: SerializeField] public float MageDamage { get; private set; } = 21f;
-        [field: SerializeField] public float AttackPhysicDistance { get; private set; } = 1f;
+        [field: SerializeField] public float AttackPhysicDistance { get; private set; } = 1.5f;
         [field: SerializeField] public float AttackMageDistance { get; private set; } = 8f;
         [field: SerializeField] public float CostSpell { get; private set; } = 20f;
         [field: SerializeField] public float MageAttackCooldown { get; private set; } = 3.0f;
@@ -96,6 +96,17 @@ namespace RPGProject {
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
                     enemy.TakeDamage(PhysicDamage);
 
+            if (gameManager.Bosses.Count > 0)
+            {
+                foreach (BossController boss in gameManager.Bosses)
+                {
+                    if (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance)
+                    {
+                        boss.TakeDamage(PhysicDamage);
+                    }
+                }
+            }
+
             gameManager.ClearNullEnemies();
             gameManager.CheckWin();
         }
@@ -113,10 +124,21 @@ namespace RPGProject {
 
             foreach (BaseEnemy enemy in gameManager.enemies)
                 if (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance) {
-                    Debug.Log(enemy);
-                    enemy.TakeDamage(PhysicDamage);
+                    enemy.TakeDamage(MageDamage);
                     break;
                 }
+
+            if (gameManager.Bosses.Count > 0)
+            {
+                foreach (BossController boss in gameManager.Bosses)
+                {
+                    if (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance)
+                    {
+                        boss.TakeDamage(MageDamage);
+                        break;
+                    }
+                }
+            }
 
             gameManager.ClearNullEnemies();
             gameManager.CheckWin();
