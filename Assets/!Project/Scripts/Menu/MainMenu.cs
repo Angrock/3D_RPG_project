@@ -4,12 +4,12 @@ namespace RPGProject {
     public class MainMenu : GameEntrypoint {
         public void GameStart() {
             Settings.isLoadGame = false;
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene(Constants.MainGameSceneName);
         }
         
         public void LoadGame() {
             Settings.isLoadGame = true;
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene(Constants.MainGameSceneName);
         }
 
         public void GameExit() {
@@ -21,3 +21,5 @@ namespace RPGProject {
         }
     }
 }
+
+// this class is no longer in use

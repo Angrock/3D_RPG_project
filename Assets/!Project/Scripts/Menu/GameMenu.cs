@@ -30,12 +30,12 @@ namespace RPGProject {
         }
 
         public void ReturnToMainMenu() {
-            SceneManager.LoadScene("UI_dev");
+            SceneManager.LoadScene(Constants.MainMenuSceneName);
         }
 
         public void RestartGame() {
             Settings.isLoadGame = false;
-            SceneManager.LoadScene("Main");
+            SceneManager.LoadScene(Constants.MainGameSceneName);
         }
     }
 }
