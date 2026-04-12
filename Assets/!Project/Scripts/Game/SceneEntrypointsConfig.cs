@@ -10,9 +10,11 @@ namespace RPGProject {
         [SerializeField] GameManager gameManager;
 
         void Awake() {
+            EntrypointBootstrapper bootstrapper;
+
             if (EntrypointBootstrapper.Instance == null) {
                 GameObject bootstrapperObj = new GameObject("EntrypointBootstrapper");
-                EntrypointBootstrapper bootstrapper = bootstrapperObj.AddComponent<EntrypointBootstrapper>();
+                bootstrapper = bootstrapperObj.AddComponent<EntrypointBootstrapper>();
 
                 bootstrapper.GetType().GetField("entrypoints", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                     ?.SetValue(bootstrapper, new GameEntrypoint[]{
@@ -24,8 +26,16 @@ namespace RPGProject {
                     });
 
                 DontDestroyOnLoad(bootstrapperObj);
-                bootstrapper.Initialize();
+            } else {
+                bootstrapper = EntrypointBootstrapper.Instance;
+                bootstrapper.autoInitializeOnAwake = false;
+
+                foreach (var entrypoint in new GameEntrypoint[]{ player, hud, gameMenu, cameraController, gameManager })
+                    if (entrypoint != null)
+                        bootstrapper.Installer.RegisterEntrypoint(entrypoint);
             }
+
+            bootstrapper.Initialize();
         }
     }
 }

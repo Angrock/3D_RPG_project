@@ -4,7 +4,7 @@ using UnityEngine;
 namespace RPGProject {
     public class EntrypointBootstrapper : MonoBehaviour {
         [Header("Настройки")]
-        [SerializeField] bool autoInitializeOnAwake = true;
+        [SerializeField] public bool autoInitializeOnAwake = true;
 
         [Header("Entrypoints")]
         [SerializeField] GameEntrypoint[] entrypoints;

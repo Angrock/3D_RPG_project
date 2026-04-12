@@ -7,24 +7,37 @@ namespace RPGProject {
         [SerializeField] float maxVerticalRotation = 30f;
 
         float verticalRotation;
-        Player player;
+        public Player player;
 
         protected override void OnInitialize() {
             verticalRotation = transform.localEulerAngles.x;
         }
 
         protected override void OnStart() {
-            player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
+            
+            // player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
+                if (player == null) {
+                    Debug.LogError("Player reference not found in CameraController.");
+                }
         }
 
         void Update() {
-            if (!isStarted) return;
-            if (!player.IsAlive) return;
 
-            verticalRotation -= Input.GetAxis("Mouse Y") * Settings.MouseSensitivityY * Time.deltaTime;
+            // if (!isStarted) return;
+            // if (player != null && !player.IsAlive) return;
+
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            if (Mathf.Approximately(mouseX, 0f) && Mathf.Approximately(mouseY, 0f)) {
+                mouseX = Input.GetAxisRaw("Mouse X");
+                mouseY = Input.GetAxisRaw("Mouse Y");
+            }
+
+            verticalRotation -= mouseY * Settings.MouseSensitivityY * Time.deltaTime;
             verticalRotation = Mathf.Clamp(verticalRotation, minVerticalRotation, maxVerticalRotation);
 
-            player.transform.Rotate(Input.GetAxis("Mouse X") * Settings.MouseSensitivityX * Time.deltaTime * Vector3.up);
+            player.transform.Rotate(mouseX * Settings.MouseSensitivityX * Time.deltaTime * Vector3.up);
             transform.localRotation = Quaternion.Euler(verticalRotation, 0f, 0f);
         }
     }
