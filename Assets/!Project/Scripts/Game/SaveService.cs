@@ -35,6 +35,8 @@ namespace RPGProject {
             InternalParams.SetVector3("PlayerRotation", player.transform.rotation.eulerAngles);
             InternalParams.SetFloat("PlayerHP", player.CurrentHP);
             InternalParams.SetFloat("PlayerMP", player.CurrentMP);
+            InternalParams.SetInt("PlayerScores", gameManager.Scores);
+
             InternalParams.SetInt("CountEnemies", gameManager.enemies.Count);
             for (int i = 0; i < gameManager.enemies.Count; i++) {
                 InternalParams.SetString($"Enemy{i}Type", gameManager.enemies[i].type.ToString());
@@ -57,6 +59,8 @@ namespace RPGProject {
             Quaternion.Euler(InternalParams.GetVector3("PlayerRotation")));
             player.SetNewHP(InternalParams.GetFloat("PlayerHP"));
             player.SetNewMP(InternalParams.GetFloat("PlayerMP"));
+            gameManager.Scores = InternalParams.GetInt("PlayerScores");
+
             int countEnemies = InternalParams.GetInt("CountEnemies");
             for (int i = 0; i < countEnemies; i++) gameManager.CreateEnemy(
                 (GameManager.EnemiesTypes)Enum.Parse(
