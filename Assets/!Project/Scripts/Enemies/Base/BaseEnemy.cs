@@ -1,10 +1,11 @@
+using System;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
 namespace RPGProject {
-    public class BaseEnemy : MonoBehaviour {
+    public abstract class BaseEnemy : MonoBehaviour {
         [Header("UI")]
         [SerializeField] protected Slider sliderHP;
 
@@ -133,12 +134,18 @@ namespace RPGProject {
 
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             sliderHP.value = CurrentHP;
+
+            if (Settings.IsPeacefulGame) {
+                StateMachine.ChangeState(GetawayState);
+            }
+
             if (CurrentHP <= 0) Death();
         }
 
         public void SetNewHP(float newHP) {
             CurrentHP = Mathf.Clamp(newHP, 0, MaxHP);
             sliderHP.value = CurrentHP;
+            if (CurrentHP <= 0) Death();
         }
 
         protected virtual void InitializeValues() {
@@ -150,6 +157,8 @@ namespace RPGProject {
             gameManager.Scores += Constants.EnemyKillScore;
             animator.SetTrigger("isDeath");
             IsAlive = false;
+            agent.isStopped = true;
+            Destroy(gameObject, 3f);
         }
 
         public float GetDistanceToPlayer() {

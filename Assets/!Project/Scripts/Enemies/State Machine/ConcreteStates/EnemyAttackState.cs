@@ -29,6 +29,12 @@ namespace RPGProject
 
             timeAttack += Time.fixedDeltaTime;
 
+            if (Settings.IsPeacefulGame)
+            {
+                stateMachine.ChangeState(enemy.GetawayState);
+                return;
+            }
+
             if (enemy.CurrentHP <= enemy.MaxHP * enemy.GetawayHPThreshold)
             {
                 stateMachine.ChangeState(enemy.GetawayState);

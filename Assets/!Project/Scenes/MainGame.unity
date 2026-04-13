@@ -1679,6 +1679,91 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 307934046}
   m_CullTransparentMesh: 1
+--- !u!1001 &319149895
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1016608176166389388, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: health
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1016608176166389388, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: viewDistance
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399344656830898514, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399344656830898514, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1399344656830898514, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2930482178675676866, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_Name
+      value: ZombieBoss
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 25.399784
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 4.07136
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 36.644844
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3003069386750319346, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802004587298346797, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3802004587298346797, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
 --- !u!195 &340079567 stripped
 NavMeshAgent:
   m_CorrespondingSourceObject: {fileID: 358502484507398573, guid: 3aa37b1faedd1c3488ab2ac077c2156f, type: 3}
@@ -4862,7 +4947,7 @@ MonoBehaviour:
   sliderHP: {fileID: 1972415194}
   sliderMP: {fileID: 371838596}
   sliderMageCooldown: {fileID: 91416368}
-  scoresText: {fileID: 0}
+  scoresText: {fileID: 1230348561}
   gameOverPannel: {fileID: 1698801771}
 --- !u!114 &952542300
 MonoBehaviour:
@@ -4902,6 +4987,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 952542297}
   m_CullTransparentMesh: 1
+--- !u!1 &965491828 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2930482178675676866, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
+  m_PrefabInstance: {fileID: 319149895}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &974287322
 GameObject:
   m_ObjectHideFlags: 0
@@ -7374,7 +7464,8 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 9118690513872493628, guid: 3aa37b1faedd1c3488ab2ac077c2156f, type: 3}
   - {fileID: 244641045342902430, guid: 49af8d225d8840b47a09db69fa8f82e1, type: 3}
-  BossPrefabs: []
+  BossPrefabs:
+  - {fileID: 965491828}
 --- !u!4 &1449726920
 Transform:
   m_ObjectHideFlags: 0
@@ -13222,3 +13313,4 @@ SceneRoots:
   - {fileID: 57751911}
   - {fileID: 1127218294}
   - {fileID: 123127485}
+  - {fileID: 319149895}

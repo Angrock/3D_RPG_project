@@ -24,6 +24,15 @@ namespace RPGProject
         {
             base.FixedUpdate();
 
+            if (Settings.IsPeacefulGame)
+            {
+                if (enemy.AgentHasReachedDestination())
+                {
+                    MoveToRandomPoint();
+                }
+                return;
+            }
+
             if (enemy.AgentHasReachedDestination() && enemy.PlayerNotInRange(enemy.player))
             {
                 MoveToRandomPoint();
