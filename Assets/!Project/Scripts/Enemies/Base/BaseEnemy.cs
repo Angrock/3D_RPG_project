@@ -27,8 +27,8 @@ namespace RPGProject {
         public EnemyAttackState AttackState { get; set; }
         public EnemyGetawayState GetawayState { get; set; }
 
+        public NavMeshAgent agent;
         [HideInInspector] public Animator animator;
-        [HideInInspector] public NavMeshAgent agent;
         [HideInInspector] public Player player;
         [HideInInspector] public GameManager gameManager;
 

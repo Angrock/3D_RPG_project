@@ -12,7 +12,7 @@ namespace RPGProject {
         [NonSerialized] public List<BossController> Bosses;
 
         private HUD hud;
-        public int InitialEnemiesCount = 0;
+        [HideInInspector] public int InitialEnemiesCount = 0;
 
         private int scores = 0;
         public int Scores
@@ -124,7 +124,9 @@ namespace RPGProject {
         public enum EnemiesTypes {
             Base,
             Meele,
-            Range
+            Range,
+            StrongMeele,
+            StrongRange,
         }
 
         private IEnumerator RemoveEnemyWithDelay(BaseEnemy enemy)

@@ -3198,25 +3198,25 @@ MonoBehaviour:
   - position: {fileID: 707121249}
     type: 1
   - position: {fileID: 540636056}
-    type: 1
+    type: 3
   - position: {fileID: 1294584538}
     type: 2
   - position: {fileID: 388323380}
     type: 1
   - position: {fileID: 1339599314}
-    type: 2
+    type: 4
   - position: {fileID: 1846574503}
     type: 2
   - position: {fileID: 2120521305}
-    type: 1
+    type: 3
   - position: {fileID: 130809285}
     type: 2
   - position: {fileID: 1227692166}
-    type: 1
+    type: 4
   - position: {fileID: 954531875}
     type: 1
   - position: {fileID: 1052306889}
-    type: 2
+    type: 3
   - position: {fileID: 537773217}
     type: 1
   bossSpawnPoints:
@@ -8535,6 +8535,8 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 9118690513872493628, guid: 3aa37b1faedd1c3488ab2ac077c2156f, type: 3}
   - {fileID: 244641045342902430, guid: 49af8d225d8840b47a09db69fa8f82e1, type: 3}
+  - {fileID: 1789012147794316512, guid: 404aa594a7f1f2843ae195ab704b835e, type: 3}
+  - {fileID: 8136163341351998636, guid: fb244372b8e4f434fb37417a0e94572b, type: 3}
   BossPrefabs:
   - {fileID: 2930482178675676866, guid: f9feda6ac70c59b4fbce405c31d4d4f4, type: 3}
   InitialEnemiesCount: 0
