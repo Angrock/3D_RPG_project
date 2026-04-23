@@ -1,7 +1,9 @@
 using UnityEngine;
 
 namespace RPGProject {
-    public class SceneEntrypointsConfig : MonoBehaviour {
+    public class SceneEntrypointsConfig : MonoBehaviour
+    {
+        /*
         [Header("Entrypoints для сцены Main")]
         [SerializeField] Player player;
         [SerializeField] HUD hud;
@@ -37,5 +39,6 @@ namespace RPGProject {
 
             bootstrapper.Initialize();
         }
+        */
     }
 }

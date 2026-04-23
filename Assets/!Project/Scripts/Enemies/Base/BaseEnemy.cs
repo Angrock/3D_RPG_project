@@ -125,7 +125,7 @@ namespace RPGProject {
 
             isAttack = true;
 
-            Debug.Log($"Enemy {type} attacked player for {Damage} damage.");
+            //Debug.Log($"Enemy {type} attacked player for {Damage} damage.");
         }
 
         public void TakeDamage(float damage) {

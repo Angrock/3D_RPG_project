@@ -188,7 +188,7 @@ namespace RPGProject
             {
                 if (boss.CanSeePlayer() && boss.IsInAttackRange())
                 {
-                    Debug.Log($"StrongAttackState: update, switch to ordinary attack");
+                    //Debug.Log($"StrongAttackState: update, switch to ordinary attack");
                     // Обычная атака
                     boss.stateMachine.ChangeState(new AttackState());
                 }

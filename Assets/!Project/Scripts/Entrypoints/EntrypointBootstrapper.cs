@@ -39,16 +39,18 @@ namespace RPGProject {
             IsInitialized = true;
         }
 
-        void RegisterServices(GameEntrypoint entrypoint) {
+        /// <summary>
+        /// Отвечает за регистрацию конкретных типов entrypoint в DI-контейнере Installer
+        /// </summary>
+        void RegisterServices(GameEntrypoint entrypoint)
+        {
+            // Регистрируем конкретный тип через рефлексию
             Type type = entrypoint.GetType();
+            var registerMethod = typeof(EntrypointInstaller)
+                .GetMethod("Register")
+                .MakeGenericMethod(type);
 
-            if (type == typeof(Player)) Installer.Register((Player)entrypoint);
-            else if (type == typeof(HUD)) Installer.Register((HUD)entrypoint);
-            else if (type == typeof(GameMenu)) Installer.Register((GameMenu)entrypoint);
-            else if (type == typeof(MainMenu)) Installer.Register((MainMenu)entrypoint);
-            else if (type == typeof(CameraController)) Installer.Register((CameraController)entrypoint);
-            else if (type == typeof(GameStateManager)) Installer.Register((GameStateManager)entrypoint);
-            else if (type == typeof(GameManager)) Installer.Register((GameManager)entrypoint);
+            registerMethod.Invoke(Installer, new object[] { entrypoint });
         }
 
         void RegisterNonMonoServices() {

@@ -41,8 +41,8 @@ namespace RPGProject {
         }
 
         public void RemoveEnemy(BaseEnemy enemy) {
-            Destroy(enemy.gameObject);
             enemies.Remove(enemy);
+            Destroy(enemy.gameObject);
         }
 
         public void CreateEnemy(EnemiesTypes typeEnemy, Vector3 position, Vector3 rotation, float newHP) {
