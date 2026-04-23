@@ -124,7 +124,6 @@ namespace RPGProject {
             }
 
             gameManager.ClearNullEnemies();
-            gameManager.CheckWin();
         }
 
         void MageAttack() {
@@ -167,7 +166,6 @@ namespace RPGProject {
             }
 
             gameManager.ClearNullEnemies();
-            gameManager.CheckWin();
         }
 
         public void TakeDamage(float damage) {

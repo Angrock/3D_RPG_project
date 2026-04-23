@@ -153,7 +153,7 @@ namespace RPGProject {
         }
 
         protected virtual void Death() {
-            Debug.Log("some enemy died");
+            //Debug.Log("some enemy died");
             gameManager.Scores += Constants.EnemyKillScore;
             animator.SetTrigger("isDeath");
             IsAlive = false;

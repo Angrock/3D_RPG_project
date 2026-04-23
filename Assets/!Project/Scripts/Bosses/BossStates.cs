@@ -242,7 +242,7 @@ namespace RPGProject
             if (timer >= destroyDelay)
             {
                 boss.enabled = false; // Отключаем компонент врага
-                UnityEngine.Object.Destroy(boss.gameObject);
+                boss.gameManager.RemoveBoss(boss);
             }
         }
 

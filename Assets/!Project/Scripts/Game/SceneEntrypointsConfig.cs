@@ -42,3 +42,5 @@ namespace RPGProject {
         */
     }
 }
+
+// this script is probably unused

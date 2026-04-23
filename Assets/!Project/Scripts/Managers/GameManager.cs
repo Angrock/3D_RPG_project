@@ -12,6 +12,7 @@ namespace RPGProject {
         [NonSerialized] public List<BossController> Bosses;
 
         private HUD hud;
+        public int InitialEnemiesCount = 0;
 
         private int scores = 0;
         public int Scores
@@ -38,26 +39,26 @@ namespace RPGProject {
 
         public void AddEnemy(BaseEnemy enemy)
         {
-            Debug.Log($"AddEnemy: Enemy = {enemy.gameObject.name}, Type = {enemy.type}, MaxHP = {enemy.MaxHP}");
+            //Debug.Log($"AddEnemy: Enemy = {enemy.gameObject.name}, Type = {enemy.type}, MaxHP = {enemy.MaxHP}");
             enemies.Add(enemy);
-
-            //if (!enemies.Contains(enemy))
-            //    enemies.Add(enemy);
         }
 
-        public void RemoveEnemy(BaseEnemy enemy) {
+        public void RemoveEnemy(BaseEnemy enemy)
+        {
             enemies.Remove(enemy);
-            Debug.Log("some enemy died and removed");
+            OnEnemisCountChanged?.Invoke(enemies.Count);
             Destroy(enemy.gameObject);
+
+            CheckWin();
         }
 
         public void CreateEnemy(EnemiesTypes typeEnemy, Vector3 position, Vector3 rotation, float newHP)
         {
-            Debug.Log($"Start CreateEnemy: Type = {typeEnemy}, newHP = {newHP}");
+            //Debug.Log($"Start CreateEnemy: Type = {typeEnemy}, newHP = {newHP}");
             if (typeEnemy == EnemiesTypes.Base)
                 return;
 
-            Debug.Log($"Creating enemy ...");
+            //Debug.Log($"Creating enemy ...");
             GameObject enemyPrefab = null;
             foreach (GameObject prefab in enemyPrefabs)
             {
@@ -69,7 +70,7 @@ namespace RPGProject {
             }
 
             Instantiate(enemyPrefab, position, Quaternion.Euler(rotation)).GetComponent<BaseEnemy>().SetNewHP(newHP);
-            Debug.Log($"Enemy created");
+            //Debug.Log($"Enemy created");
         }
 
         public void ClearNullEnemies() {
@@ -87,13 +88,37 @@ namespace RPGProject {
         public void AddBoss(BossController boss)
         {
             Bosses.Add(boss);
-
-            //if (!Bosses.Contains(boss))
-            //    Bosses.Add(boss);
         }
 
-        public void CheckWin() {
-            if (enemies.Count == 0) Debug.Log("Player Win!");
+        public void RemoveBoss(BossController boss)
+        {
+            Bosses.Remove(boss);
+            Destroy(boss.gameObject);
+
+            CheckWin();
+        }
+
+        public void CreateBoss(BossController boss, Vector3 position, Vector3 rotation)
+        {
+            GameObject bossPrefab = null;
+            foreach (GameObject prefab in BossPrefabs)
+            {
+                if (prefab.GetComponent<BossController>() == boss)
+                {
+                    bossPrefab = prefab;
+                    break;
+                }
+            }
+
+            Instantiate(bossPrefab, position, Quaternion.Euler(rotation));
+        }
+
+        public void CheckWin()
+        {
+            if ((enemies.Count == 0) && (Bosses.Count == 0))
+            {
+                Debug.Log("Player Win!");
+            }
         }
 
         public enum EnemiesTypes {
@@ -117,5 +142,7 @@ namespace RPGProject {
 
             yield break;
         }
+
+        public event Action<int> OnEnemisCountChanged;
     }
 }

@@ -2179,7 +2179,7 @@ MonoBehaviour:
   viewDistance: 5
   attackRange: 4
   patrolRadius: 15
-  health: 200
+  health: 350
   damage: 1.5
   strongDamage: 2
   strongAttackChance: 25

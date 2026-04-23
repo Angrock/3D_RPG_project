@@ -14,7 +14,7 @@ namespace RPGProject
         public float viewDistance = 5f; // viewDistance is always must be higher than attackRange !
         public float attackRange = 4f;
         public float patrolRadius = 15f;
-        public float health = 200f;
+        public float health = 350f;
         public float damage = 1.5f;
         public float strongDamage = 2.0f;
         public float strongAttackChance = 25f;
