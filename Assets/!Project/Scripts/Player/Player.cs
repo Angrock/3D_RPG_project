@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace RPGProject {
@@ -97,9 +98,13 @@ namespace RPGProject {
             animator.SetTrigger("TriggerPhisycAttack");
             SwapWeapons(true);
 
-            foreach (BaseEnemy enemy in gameManager.enemies)
+            // Создаем копии списков для безопасной итерации
+            List<BaseEnemy> enemiesCopy = new List<BaseEnemy>(gameManager.enemies);
+            List<BossController> bossesCopy = new List<BossController>(gameManager.Bosses);
+
+            foreach (BaseEnemy enemy in enemiesCopy)
             {
-                if (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance)
+                if ((enemy != null) && (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance))
                 {
                     enemy.TakeDamage(PhysicDamage);
                     gameManager.Scores += Constants.EnemyDamageScore;
@@ -108,9 +113,9 @@ namespace RPGProject {
 
             if (gameManager.Bosses.Count > 0)
             {
-                foreach (BossController boss in gameManager.Bosses)
+                foreach (BossController boss in bossesCopy)
                 {
-                    if (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance)
+                    if ((boss != null) && (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance))
                     {
                         boss.TakeDamage(PhysicDamage);
                         gameManager.Scores += Constants.BossDamageScore;
@@ -134,18 +139,25 @@ namespace RPGProject {
             SpendMP(CostSpell);
             hud.SetMageCooldown(0);
 
-            foreach (BaseEnemy enemy in gameManager.enemies)
-                if (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance) {
+            // Создаем копии списков для безопасной итерации
+            List<BaseEnemy> enemiesCopy = new List<BaseEnemy>(gameManager.enemies);
+            List<BossController> bossesCopy = new List<BossController>(gameManager.Bosses);
+
+            foreach (BaseEnemy enemy in enemiesCopy)
+            {
+                if ((enemy != null) && (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance))
+                {
                     enemy.TakeDamage(MageDamage);
                     gameManager.Scores += Constants.EnemyDamageScore;
                     break;
                 }
+            }
 
             if (gameManager.Bosses.Count > 0)
             {
-                foreach (BossController boss in gameManager.Bosses)
+                foreach (BossController boss in bossesCopy)
                 {
-                    if (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance)
+                    if ((boss != null) && (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance))
                     {
                         boss.TakeDamage(MageDamage);
                         gameManager.Scores += Constants.BossDamageScore;

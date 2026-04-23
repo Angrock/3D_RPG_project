@@ -11,12 +11,12 @@ namespace RPGProject
 
         public Animator animator;
         public NavMeshAgent navMeshAgent;
-        public float viewDistance = 3f;
-        public float attackRange = 4f; // attackRange is always must be higher than viewDistance !
+        public float viewDistance = 5f; // viewDistance is always must be higher than attackRange !
+        public float attackRange = 4f;
         public float patrolRadius = 15f;
-        public float health = 500f;
-        public float damage = 2.75f;
-        public float strongDamage = 5f;
+        public float health = 200f;
+        public float damage = 1.5f;
+        public float strongDamage = 2.0f;
         public float strongAttackChance = 25f;
 
         [NonSerialized] public bool isAgressive = false;

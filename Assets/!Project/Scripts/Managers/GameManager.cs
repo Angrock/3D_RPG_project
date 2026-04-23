@@ -36,25 +36,40 @@ namespace RPGProject {
             saveService.LoadGame();
         }
 
-        public void AddEnemy(BaseEnemy enemy) {
-            if (!enemies.Contains(enemy)) enemies.Add(enemy);
+        public void AddEnemy(BaseEnemy enemy)
+        {
+            Debug.Log($"AddEnemy: Enemy = {enemy.gameObject.name}, Type = {enemy.type}, MaxHP = {enemy.MaxHP}");
+            enemies.Add(enemy);
+
+            //if (!enemies.Contains(enemy))
+            //    enemies.Add(enemy);
         }
 
         public void RemoveEnemy(BaseEnemy enemy) {
             enemies.Remove(enemy);
+            Debug.Log("some enemy died and removed");
             Destroy(enemy.gameObject);
         }
 
-        public void CreateEnemy(EnemiesTypes typeEnemy, Vector3 position, Vector3 rotation, float newHP) {
-            if (typeEnemy == EnemiesTypes.Base) return;
+        public void CreateEnemy(EnemiesTypes typeEnemy, Vector3 position, Vector3 rotation, float newHP)
+        {
+            Debug.Log($"Start CreateEnemy: Type = {typeEnemy}, newHP = {newHP}");
+            if (typeEnemy == EnemiesTypes.Base)
+                return;
+
+            Debug.Log($"Creating enemy ...");
             GameObject enemyPrefab = null;
             foreach (GameObject prefab in enemyPrefabs)
-                if (prefab.GetComponent<BaseEnemy>().name == "Enemy" + typeEnemy) {
-                    Debug.Log(typeEnemy);
+            {
+                if (prefab.GetComponent<BaseEnemy>().name == "Enemy" + typeEnemy)
+                {
                     enemyPrefab = prefab;
                     break;
                 }
+            }
+
             Instantiate(enemyPrefab, position, Quaternion.Euler(rotation)).GetComponent<BaseEnemy>().SetNewHP(newHP);
+            Debug.Log($"Enemy created");
         }
 
         public void ClearNullEnemies() {
@@ -71,8 +86,10 @@ namespace RPGProject {
 
         public void AddBoss(BossController boss)
         {
-            if (!Bosses.Contains(boss))
-                Bosses.Add(boss);
+            Bosses.Add(boss);
+
+            //if (!Bosses.Contains(boss))
+            //    Bosses.Add(boss);
         }
 
         public void CheckWin() {

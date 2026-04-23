@@ -9,9 +9,6 @@ namespace RPGProject {
         [Header("UI")]
         [SerializeField] protected Slider sliderHP;
 
-        public Animator animator;
-        public NavMeshAgent agent;
-
         public float MaxHP { get; protected set; }
         public float CurrentHP { get; protected set; }
         public float Damage { get; protected set; }
@@ -22,7 +19,7 @@ namespace RPGProject {
         public bool IsAlive { get; protected set; }
         public float IdleRadius { get; protected set; }
         public float GetawayHPThreshold { get; protected set; } = 0.25f;
-        public virtual GameManager.EnemiesTypes type { get; protected set; }
+        public GameManager.EnemiesTypes type { get; protected set; }
 
         public EnemyStateMachine StateMachine { get; set; }
         public EnemyIdleState IdleState { get; set; }
@@ -30,11 +27,13 @@ namespace RPGProject {
         public EnemyAttackState AttackState { get; set; }
         public EnemyGetawayState GetawayState { get; set; }
 
-        public bool isAttack;
-        
-        public Player player;
+        [HideInInspector] public Animator animator;
+        [HideInInspector] public NavMeshAgent agent;
+        [HideInInspector] public Player player;
+        [HideInInspector] public GameManager gameManager;
+
+        [HideInInspector] public bool isAttack;
         bool isInitialized;
-        public GameManager gameManager;
 
         void Awake() {
             
@@ -148,12 +147,13 @@ namespace RPGProject {
             if (CurrentHP <= 0) Death();
         }
 
-        protected virtual void InitializeValues() {
+        public virtual void InitializeValues() {
             // Initialize any values here
             agent.stoppingDistance = 0.1f;
         }
 
         protected virtual void Death() {
+            Debug.Log("some enemy died");
             gameManager.Scores += Constants.EnemyKillScore;
             animator.SetTrigger("isDeath");
             IsAlive = false;
