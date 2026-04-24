@@ -109,9 +109,10 @@ namespace RPGProject
             //boss.animator.SetTrigger("Attack");
 
             isStrongAttackNext = (Random.Range(0, 101) < boss.strongAttackChance) ? true : false;
+            boss.PickAttackEffect(false);
 
-            Debug.Log($"AttackState -> Enter");
-            Debug.Log($"isStrongAttackNext = {isStrongAttackNext}");
+            //Debug.Log($"AttackState -> Enter");
+            //Debug.Log($"isStrongAttackNext = {isStrongAttackNext}");
         }
 
         public override void Update()
@@ -164,7 +165,8 @@ namespace RPGProject
             base.Exit();
 
             boss.animator.SetBool("isAttack", false);
-            Debug.Log($"AttackState -> Exit");
+            boss.isEffectAttack = false;
+            //Debug.Log($"AttackState -> Exit");
         }
     }
 
@@ -183,7 +185,9 @@ namespace RPGProject
             boss.navMeshAgent.isStopped = true;
             boss.animator.SetBool("isStrongAttack", true);
 
-            Debug.Log($"StrongAttackState -> Enter");
+            boss.PickAttackEffect(true);
+
+            //Debug.Log($"StrongAttackState -> Enter");
         }
 
         public override void Update()
@@ -195,7 +199,7 @@ namespace RPGProject
             // Атака с задержкой
             if (!hasAttacked && attackCooldown >= attackDelay * 0.5f)
             {
-                Debug.Log($"StrongAttackState: Update -> boss strong attacks player");
+                //Debug.Log($"StrongAttackState: Update -> boss strong attacks player");
                 hasAttacked = true;
                 boss.StrongAttackPlayer();
             }
@@ -205,7 +209,7 @@ namespace RPGProject
             {
                 if (boss.CanSeePlayer() && boss.IsInAttackRange())
                 {
-                    Debug.Log($"StrongAttackState: Update -> switch to ordinary attack");
+                    //Debug.Log($"StrongAttackState: Update -> switch to ordinary attack");
                     // Обычная атака
                     boss.stateMachine.ChangeState(new AttackState());
                 }
@@ -230,9 +234,10 @@ namespace RPGProject
         public override void Exit()
         {
             base.Exit();
-            boss.animator.SetBool("isStrongAttack", false);
 
-            Debug.Log($"StrongAttackState -> Exit");
+            boss.animator.SetBool("isStrongAttack", false);
+            boss.isEffectAttack = false;
+            //Debug.Log($"StrongAttackState -> Exit");
         }
     }
 

@@ -50,12 +50,13 @@ namespace RPGProject {
             {
                 PhysicDamage *= 100f;
                 MageDamage *= 100f;
+                CurrentMP = 9999999.0f;
             }
             #else
             CurrentHP = MaxHP;
+            CurrentMP = MaxMP;
             #endif
 
-            CurrentMP = MaxMP;
             timer = 0;
             currentAttackCooldown = 0;
             isAttack = false;
@@ -117,7 +118,7 @@ namespace RPGProject {
 
             foreach (BaseEnemy enemy in enemiesCopy)
             {
-                if ((enemy != null) && (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance))
+                if ((enemy != null) && enemy.IsAlive && (Vector3.Distance(transform.position, enemy.transform.position) < AttackPhysicDistance))
                 {
                     enemy.TakeDamage(PhysicDamage);
                     gameManager.Scores += Constants.EnemyDamageScore;
@@ -128,7 +129,7 @@ namespace RPGProject {
             {
                 foreach (BossController boss in bossesCopy)
                 {
-                    if ((boss != null) && (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance))
+                    if ((boss != null) && (boss.health > 0) && (Vector3.Distance(transform.position, boss.transform.position) < AttackPhysicDistance))
                     {
                         boss.TakeDamage(PhysicDamage);
                         gameManager.Scores += Constants.BossDamageScore;
@@ -157,7 +158,7 @@ namespace RPGProject {
 
             foreach (BaseEnemy enemy in enemiesCopy)
             {
-                if ((enemy != null) && (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance))
+                if ((enemy != null) && enemy.IsAlive && (Vector3.Distance(transform.position, enemy.transform.position) < AttackMageDistance))
                 {
                     enemy.TakeDamage(MageDamage);
                     gameManager.Scores += Constants.EnemyDamageScore;
@@ -169,7 +170,7 @@ namespace RPGProject {
             {
                 foreach (BossController boss in bossesCopy)
                 {
-                    if ((boss != null) && (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance))
+                    if ((boss != null) && (boss.health > 0) && (Vector3.Distance(transform.position, boss.transform.position) < AttackMageDistance))
                     {
                         boss.TakeDamage(MageDamage);
                         gameManager.Scores += Constants.BossDamageScore;

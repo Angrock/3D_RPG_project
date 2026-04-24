@@ -13,6 +13,9 @@ namespace RPGProject
         public NavMeshAgent navMeshAgent;
         public Animator animator;
 
+        [Header("Effects")]
+        [SerializeField] private List<AttackEfects> bossAttackEfects;
+
         [Header("Boss Fields")]
         public float viewDistance = 5f; // viewDistance is always must be higher than attackRange !
         public float attackRange = 4f;
@@ -20,13 +23,17 @@ namespace RPGProject
         public float health = 350f;
         public float damage = 1.35f;
         public float strongDamage = 1.9f;
-        public float strongAttackChance = 40f;
+
+        [Header("Chances")]
+        public float strongAttackChance = 50f;
+        public float effectAttackChance = 60f;
 
         [NonSerialized] public Player player;
         [NonSerialized] public GameManager gameManager;
         public BossStateMachine stateMachine;
 
         [NonSerialized] public bool isAgressive = false;
+        [HideInInspector] public bool isEffectAttack = false;
 
         void Start()
         {
@@ -93,7 +100,33 @@ namespace RPGProject
                 stateMachine.ChangeState(new DeathState());
         }
 
+        public void PickAttackEffect(bool isStrongAttack)
+        {
+            isEffectAttack = (UnityEngine.Random.Range(0, 101) < effectAttackChance) ? true : false;
+
+            if (isEffectAttack)
+            {
+                int randomEffectIndex = UnityEngine.Random.Range(0, bossAttackEfects.Count);
+                List<ParticleSystem> currentEffects;
+
+                if (isStrongAttack)
+                    currentEffects = bossAttackEfects[randomEffectIndex].strongAttackEffects;
+                else
+                    currentEffects = bossAttackEfects[randomEffectIndex].attackEffects;
+
+                foreach (ParticleSystem effect in currentEffects)
+                    effect.Play();
+            }
+        }
+
         public void OnSeePlayer() => stateMachine.CurrentState?.OnSeePlayer();
         public void OnLosePlayer() => stateMachine.CurrentState?.OnLosePlayer();
+
+        [Serializable]
+        public class AttackEfects
+        {
+            public List<ParticleSystem> attackEffects;
+            public List<ParticleSystem> strongAttackEffects;
+        }
     }
 }
