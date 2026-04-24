@@ -1,5 +1,4 @@
 using System;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -153,12 +152,13 @@ namespace RPGProject {
         }
 
         protected virtual void Death() {
-            //Debug.Log("some enemy died");
+            IsAlive = false;
+            //Debug.Log($"some enemy died, name = {this.name}, is alive = {IsAlive}");
             gameManager.Scores += Constants.EnemyKillScore;
             animator.SetTrigger("isDeath");
-            IsAlive = false;
             agent.isStopped = true;
-            Destroy(gameObject, 3f);
+            agent.speed = 0f;
+            //Destroy(gameObject, 3f);
         }
 
         public float GetDistanceToPlayer() {

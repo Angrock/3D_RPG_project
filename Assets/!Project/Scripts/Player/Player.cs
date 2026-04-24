@@ -52,6 +52,10 @@ namespace RPGProject {
                 MageDamage *= 100f;
                 CurrentMP = 9999999.0f;
             }
+            else
+            {
+                CurrentMP = MaxMP;
+            }
             #else
             CurrentHP = MaxHP;
             CurrentMP = MaxMP;
@@ -216,8 +220,8 @@ namespace RPGProject {
 
         void Death() {
             IsAlive = false;
-            gameManager.RemoveAllEnemies();
             hud.GameOver();
+            gameManager.RemoveAllEnemies();
         }
     }
 }

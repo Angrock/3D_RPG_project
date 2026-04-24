@@ -2,6 +2,7 @@ namespace RPGProject
 {
     public static class Constants
     {
+        public const string SaveFileName = "GameProgress.enfity";
         public const string MainMenuSceneName = "MainMenu";
         public const string MainGameSceneName = "MainGame";
         public const int EnemyDamageScore = 1;

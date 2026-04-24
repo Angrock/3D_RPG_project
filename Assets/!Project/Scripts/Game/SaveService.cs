@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Enfity.SaveAndLoad;
 using UnityEngine;
 
@@ -10,13 +11,12 @@ namespace RPGProject {
     }
 
     public class SaveService : ISaveService, IEntrypoint {
-        const string SaveKey = "GameParameters.enfity";
         bool isInitialized;
 
         public void Initialize() {
             if (isInitialized) return;
             isInitialized = true;
-            InternalParams.SetSaveFileName(SaveKey);
+            InternalParams.SetSaveFileName(Constants.SaveFileName);
         }
 
         public void EntrypointStart() { }
@@ -37,12 +37,45 @@ namespace RPGProject {
             InternalParams.SetFloat("PlayerMP", player.CurrentMP);
             InternalParams.SetInt("PlayerScores", gameManager.Scores);
 
-            InternalParams.SetInt("CountEnemies", gameManager.enemies.Count);
-            for (int i = 0; i < gameManager.enemies.Count; i++) {
-                InternalParams.SetString($"Enemy{i}Type", gameManager.enemies[i].type.ToString());
-                InternalParams.SetVector3($"Enemy{i}Position", gameManager.enemies[i].transform.position);
-                InternalParams.SetVector3($"Enemy{i}Rotation", gameManager.enemies[i].transform.rotation.eulerAngles);
-                InternalParams.SetFloat($"Enemy{i}HP", gameManager.enemies[i].CurrentHP);
+            // Создаем копии списков для безопасной итерации
+            List<BaseEnemy> enemiesCopy = new List<BaseEnemy>(gameManager.enemies);
+            List<BossController> bossesCopy = new List<BossController>(gameManager.Bosses);
+
+            //Debug.Log($"gameManager.enemies = {gameManager.enemies.Count}");
+            //Debug.Log($"enemiesCopy = {enemiesCopy.Count}");
+
+            InternalParams.SetInt("CountEnemies", enemiesCopy.Count);
+            for (int i = 0; i < enemiesCopy.Count; i++)
+            {
+                Debug.Log($"saving... {i}");
+                if ((enemiesCopy[i] != null) && enemiesCopy[i].IsAlive)
+                {
+                    //Debug.Log($"saved {i}");
+                    //Debug.Log($"name = {enemiesCopy[i].name}, is alive = {enemiesCopy[i].IsAlive}");
+                    InternalParams.SetString($"Enemy{i}Type", enemiesCopy[i].type.ToString());
+                    InternalParams.SetVector3($"Enemy{i}Position", enemiesCopy[i].transform.position);
+                    InternalParams.SetVector3($"Enemy{i}Rotation", enemiesCopy[i].transform.rotation.eulerAngles);
+                    InternalParams.SetFloat($"Enemy{i}HP", enemiesCopy[i].CurrentHP);
+                }
+                else if (InternalParams.HasKeyString($"Enemy{i}Type"))
+                {
+                    InternalParams.DeleteKeyString($"Enemy{i}Type");
+                    InternalParams.DeleteKeyVector3($"Enemy{i}Position");
+                    InternalParams.DeleteKeyVector3($"Enemy{i}Rotation");
+                    InternalParams.DeleteKeyFloat($"Enemy{i}HP");
+                }
+            }
+
+            InternalParams.SetInt("CountBosses", bossesCopy.Count);
+            for (int i = 0; i < bossesCopy.Count; i++)
+            {
+                if ((bossesCopy[i] != null) && (bossesCopy[i].health > 0))
+                {
+                    InternalParams.SetString($"Boss{i}Name", bossesCopy[i].name.Split("(Clone)")[0]);
+                    InternalParams.SetVector3($"Boss{i}Position", bossesCopy[i].transform.position);
+                    InternalParams.SetVector3($"Boss{i}Rotation", bossesCopy[i].transform.rotation.eulerAngles);
+                    InternalParams.SetFloat($"Boss{i}HP", bossesCopy[i].health);
+                }
             }
         }
 
@@ -62,12 +95,41 @@ namespace RPGProject {
             gameManager.Scores = InternalParams.GetInt("PlayerScores");
 
             int countEnemies = InternalParams.GetInt("CountEnemies");
-            for (int i = 0; i < countEnemies; i++) gameManager.CreateEnemy(
-                (GameManager.EnemiesTypes)Enum.Parse(
-                    typeof(GameManager.EnemiesTypes), InternalParams.GetString($"Enemy{i}Type")),
-                InternalParams.GetVector3($"Enemy{i}Position"),
-                InternalParams.GetVector3($"Enemy{i}Rotation"),
-                InternalParams.GetFloat($"Enemy{i}HP"));
+            gameManager.InitialEnemiesCount = countEnemies;
+            for (int i = 0; i < countEnemies; i++)
+            {
+                Debug.Log($"i = {i}, has key = {InternalParams.HasKeyString($"Enemy{i}Type")}, |{InternalParams.GetString($"Enemy{i}Type")}|");
+
+                if (InternalParams.HasKeyString($"Enemy{i}Type"))
+                {
+                    gameManager.CreateEnemy(
+                        (GameManager.EnemiesTypes)Enum.Parse(
+                            typeof(GameManager.EnemiesTypes), InternalParams.GetString($"Enemy{i}Type")),
+                        InternalParams.GetVector3($"Enemy{i}Position"),
+                        InternalParams.GetVector3($"Enemy{i}Rotation"),
+                        InternalParams.GetFloat($"Enemy{i}HP"));
+                }
+            }
+
+            int bossesCount = InternalParams.GetInt("CountBosses");
+            for (int i = 0; i < bossesCount; i++)
+            {
+                for (int j = 0; j < gameManager.BossPrefabs.Count; j++)
+                {
+                    if (gameManager.BossPrefabs[j].name == InternalParams.GetString($"Boss{i}Name"))
+                    {
+                        BossController boss = gameManager.BossPrefabs[j].GetComponent<BossController>();
+                        boss.SetNewHealth(InternalParams.GetFloat($"Boss{i}HP"));
+
+                        gameManager.CreateBoss(
+                            boss,
+                            InternalParams.GetVector3($"Boss{i}Position"),
+                            InternalParams.GetVector3($"Boss{i}Rotation"),
+                            InternalParams.GetFloat($"Boss{i}HP"));
+                        break;
+                    }
+                }
+            }
         }
 
         public void DeleteSave() {

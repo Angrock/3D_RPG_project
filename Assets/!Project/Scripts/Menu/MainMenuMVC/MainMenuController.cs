@@ -25,8 +25,15 @@ namespace RPGProject
         public void OnLoadGame()
         {
             //view.PlayButtonClickSound();
-            model.LoadGame();
-            SceneManager.LoadScene(Constants.MainGameSceneName);
+            if (System.IO.File.Exists(Constants.SaveFileName))
+            {
+                model.LoadGame();
+                SceneManager.LoadScene(Constants.MainGameSceneName);
+            }
+            else
+            {
+                UnityEngine.Debug.Log("Is no any save file to load the game");
+            }
         }
 
         public void OnPeacefulGame()

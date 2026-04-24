@@ -20,6 +20,7 @@ namespace RPGProject
         public float viewDistance = 5f; // viewDistance is always must be higher than attackRange !
         public float attackRange = 4f;
         public float patrolRadius = 15f;
+        public float maxHealth = 350f;
         public float health = 350f;
         public float damage = 1.35f;
         public float strongDamage = 1.9f;
@@ -45,9 +46,12 @@ namespace RPGProject
 
             player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
 
+            if (!Settings.isLoadGame)
+                health = maxHealth;
+
             if (sliderHP != null)
             {
-                sliderHP.maxValue = health;
+                sliderHP.maxValue = maxHealth;
                 sliderHP.value = health;
             }
         }
@@ -98,6 +102,11 @@ namespace RPGProject
 
             if (health <= 0)
                 stateMachine.ChangeState(new DeathState());
+        }
+
+        public void SetNewHealth(float newHealth)
+        {
+            health = newHealth;
         }
 
         public void PickAttackEffect(bool isStrongAttack)

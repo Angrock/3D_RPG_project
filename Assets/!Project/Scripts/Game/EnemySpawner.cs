@@ -25,8 +25,12 @@ namespace RPGProject {
         protected override void OnStart()
         {
             gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
-            SpawnAll();
-            gameManager.InitialEnemiesCount = spawnPoints.Length;
+
+            if (!Settings.isLoadGame)
+            {
+                SpawnAll();
+                gameManager.InitialEnemiesCount = spawnPoints.Length;
+            }
 
             gameManager.OnEnemisCountChanged += SpawnBoss;
         }
@@ -54,7 +58,7 @@ namespace RPGProject {
                     break;
             }
 
-            gameManager.AddEnemy(enemy);
+            //gameManager.AddEnemy(enemy);
             gameManager.CreateEnemy(
                 spawnPoint.type,
                 spawnPoint.position.position,

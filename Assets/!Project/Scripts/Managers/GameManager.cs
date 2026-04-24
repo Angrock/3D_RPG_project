@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace RPGProject {
     public class GameManager : GameEntrypoint {
@@ -47,7 +48,7 @@ namespace RPGProject {
         {
             enemies.Remove(enemy);
             OnEnemisCountChanged?.Invoke(enemies.Count);
-            Destroy(enemy.gameObject);
+            DestroyImmediate(enemy.gameObject, true);
 
             CheckWin();
         }
@@ -82,7 +83,8 @@ namespace RPGProject {
         }
 
         public void RemoveAllEnemies() {
-            for (int i = enemies.Count - 1; i >= 0; i--) RemoveEnemy(enemies[i]);
+            for (int i = enemies.Count - 1; i >= 0; i--)
+                RemoveEnemy(enemies[i]);
         }
 
         public void AddBoss(BossController boss)
@@ -93,12 +95,12 @@ namespace RPGProject {
         public void RemoveBoss(BossController boss)
         {
             Bosses.Remove(boss);
-            Destroy(boss.gameObject);
+            DestroyImmediate(boss.gameObject, true);
 
             CheckWin();
         }
 
-        public void CreateBoss(BossController boss, Vector3 position, Vector3 rotation)
+        public void CreateBoss(BossController boss, Vector3 position, Vector3 rotation, float? health = null)
         {
             GameObject bossPrefab = null;
             foreach (GameObject prefab in BossPrefabs)
@@ -110,11 +112,15 @@ namespace RPGProject {
                 }
             }
 
-            Instantiate(bossPrefab, position, Quaternion.Euler(rotation));
+            if (health == null)
+                Instantiate(bossPrefab, position, Quaternion.Euler(rotation));
+            else
+                Instantiate(bossPrefab, position, Quaternion.Euler(rotation)).GetComponent<BossController>().SetNewHealth((float)health);
         }
 
         public void CheckWin()
         {
+            Debug.Log($"enemies.Count = {enemies.Count}, Bosses.Count = {Bosses.Count}");
             if ((enemies.Count == 0) && (Bosses.Count == 0))
             {
                 hud.GameWin();
@@ -136,6 +142,7 @@ namespace RPGProject {
             try
             {
                 RemoveEnemy(enemy);
+                DestroyImmediate(enemy.gameObject, true);
             }
             catch (MissingReferenceException exception)
             {
