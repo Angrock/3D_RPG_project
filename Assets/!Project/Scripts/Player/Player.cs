@@ -215,7 +215,6 @@ namespace RPGProject {
         }
 
         void Death() {
-            //Debug.Log("Test text death player");
             IsAlive = false;
             gameManager.RemoveAllEnemies();
             hud.GameOver();

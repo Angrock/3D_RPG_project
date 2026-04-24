@@ -117,7 +117,7 @@ namespace RPGProject {
         {
             if ((enemies.Count == 0) && (Bosses.Count == 0))
             {
-                Debug.Log("Player Win!");
+                hud.GameWin();
             }
         }
 

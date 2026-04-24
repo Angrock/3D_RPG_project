@@ -10,6 +10,7 @@ namespace RPGProject {
         [SerializeField] Slider sliderMageCooldown;
         [SerializeField] private TextMeshProUGUI scoresText;
         [SerializeField] GameObject gameOverPannel;
+        [SerializeField] private GameObject winPannel;
 
         GameMenu gameMenu;
 
@@ -52,12 +53,22 @@ namespace RPGProject {
             scoresText.text = $"Очки: {newScore}";
         }
 
-        public void GameWin() => Debug.Log("Test text game win");
-        public void GameOver() {
-            Debug.Log("Test text game over");
-            gameMenu.SetActive(false);
-            gameMenu.SetActiveCursor(true);
+        public void GameWin()
+        {
+            SetActiveGameMenu(false);
+            winPannel.SetActive(true);
+        }
+
+        public void GameOver()
+        {
+            SetActiveGameMenu(false);
             gameOverPannel.SetActive(true);
+        }
+
+        private void SetActiveGameMenu(bool isActive)
+        {
+            gameMenu.SetActive(isActive);
+            gameMenu.SetActiveCursor(!isActive);
         }
     }
 }
