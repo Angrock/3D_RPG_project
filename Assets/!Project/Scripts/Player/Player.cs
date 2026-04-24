@@ -20,7 +20,10 @@ namespace RPGProject {
         [field: SerializeField] public float MageAttackCooldown { get; private set; } = 3.0f;
         [field: SerializeField] public float PhysicAttackCooldown { get; private set; } = 2.0f;
 
+        #if UNITY_EDITOR
         [field: SerializeField] public bool IsGodMode { get; private set; } = false;
+        [field: SerializeField] public bool IsStrongMode { get; private set; } = false;
+        #endif
 
         public float CurrentHP { get; private set; }
         public float CurrentMP { get; private set; }
@@ -41,7 +44,17 @@ namespace RPGProject {
             rigidbody = GetComponent<Rigidbody>();
             animator = GetComponent<Animator>();
 
+            #if UNITY_EDITOR
             CurrentHP = (!IsGodMode) ? MaxHP : 9999999.0f;
+            if (IsStrongMode)
+            {
+                PhysicDamage *= 100f;
+                MageDamage *= 100f;
+            }
+            #else
+            CurrentHP = MaxHP;
+            #endif
+
             CurrentMP = MaxMP;
             timer = 0;
             currentAttackCooldown = 0;

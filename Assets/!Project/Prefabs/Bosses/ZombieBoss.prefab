@@ -2174,15 +2174,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderHP: {fileID: 2137140742984785109}
-  animator: {fileID: 3463439503250239142}
   navMeshAgent: {fileID: 6932125367904626446}
+  animator: {fileID: 3463439503250239142}
   viewDistance: 5
   attackRange: 4
   patrolRadius: 15
   health: 350
-  damage: 1.5
-  strongDamage: 2
-  strongAttackChance: 25
+  damage: 1.35
+  strongDamage: 1.9
+  strongAttackChance: 40
 --- !u!1 &2984967492229475519
 GameObject:
   m_ObjectHideFlags: 0

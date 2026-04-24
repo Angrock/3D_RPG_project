@@ -13721,7 +13721,8 @@ MonoBehaviour:
   <CostSpell>k__BackingField: 20
   <MageAttackCooldown>k__BackingField: 3
   <PhysicAttackCooldown>k__BackingField: 2
-  <IsGodMode>k__BackingField: 0
+  <IsGodMode>k__BackingField: 1
+  <IsStrongMode>k__BackingField: 1
 --- !u!54 &5866666021637831327
 Rigidbody:
   m_ObjectHideFlags: 0

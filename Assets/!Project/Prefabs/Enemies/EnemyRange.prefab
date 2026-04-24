@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderHP: {fileID: 1234445136110776931}
-  animator: {fileID: 3998625432209864444}
   agent: {fileID: 1676500587937249464}
+  animator: {fileID: 3998625432209864444}
   player: {fileID: 0}
   gameManager: {fileID: 0}
   isAttack: 0

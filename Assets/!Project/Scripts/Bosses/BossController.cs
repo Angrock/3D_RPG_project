@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
@@ -7,22 +8,25 @@ namespace RPGProject
 {
     public class BossController : MonoBehaviour
     {
+        [Header("Components")]
         [SerializeField] private Slider sliderHP;
-
-        public Animator animator;
         public NavMeshAgent navMeshAgent;
+        public Animator animator;
+
+        [Header("Boss Fields")]
         public float viewDistance = 5f; // viewDistance is always must be higher than attackRange !
         public float attackRange = 4f;
         public float patrolRadius = 15f;
         public float health = 350f;
-        public float damage = 1.5f;
-        public float strongDamage = 2.0f;
-        public float strongAttackChance = 25f;
+        public float damage = 1.35f;
+        public float strongDamage = 1.9f;
+        public float strongAttackChance = 40f;
 
-        [NonSerialized] public bool isAgressive = false;
         [NonSerialized] public Player player;
         [NonSerialized] public GameManager gameManager;
         public BossStateMachine stateMachine;
+
+        [NonSerialized] public bool isAgressive = false;
 
         void Start()
         {
