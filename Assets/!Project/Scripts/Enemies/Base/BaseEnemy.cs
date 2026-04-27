@@ -19,6 +19,7 @@ namespace RPGProject {
         public float IdleRadius { get; protected set; }
         public float GetawayHPThreshold { get; protected set; } = 0.25f;
         public GameManager.EnemiesTypes type { get; protected set; }
+        
 
         public EnemyStateMachine StateMachine { get; set; }
         public EnemyIdleState IdleState { get; set; }
@@ -33,7 +34,7 @@ namespace RPGProject {
 
         [HideInInspector] public bool isAttack;
         bool isInitialized;
-
+        [SerializeField] protected CharacterAudioController AudioController;
         void Awake() {
             
             StateMachine = new EnemyStateMachine();
@@ -101,6 +102,7 @@ namespace RPGProject {
 
         public void MoveTo(Vector3 position) {
             agent.SetDestination(position);
+            AudioController.Play("walking");
             animator.SetBool("isMove", true);
         }
 
@@ -118,6 +120,7 @@ namespace RPGProject {
             player.TakeDamage(Damage);
 
             animator.SetTrigger("TriggerAttack");
+            AudioController.Play("attack");
             animator.SetBool("isMove", false);
             transform.LookAt(player.transform, Vector3.up);
 
@@ -132,6 +135,7 @@ namespace RPGProject {
 
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             sliderHP.value = CurrentHP;
+            AudioController.Play("hit");
 
             if (Settings.IsPeacefulGame) {
                 StateMachine.ChangeState(GetawayState);
@@ -155,6 +159,7 @@ namespace RPGProject {
             IsAlive = false;
             //Debug.Log($"some enemy died, name = {this.name}, is alive = {IsAlive}");
             gameManager.Scores += Constants.EnemyKillScore;
+            AudioController.Play("death");
             animator.SetTrigger("isDeath");
             agent.isStopped = true;
             agent.speed = 0f;

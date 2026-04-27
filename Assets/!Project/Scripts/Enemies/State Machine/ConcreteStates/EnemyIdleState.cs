@@ -13,11 +13,13 @@ namespace RPGProject
         {
             base.EnterState();
             MoveToRandomPoint();
+            Debug.Log("Entered Idle State");
         }
 
         public override void ExitState()
         {
             base.ExitState();
+            Debug.Log("Exited Idle State");
         }
 
         public override void FixedUpdate()

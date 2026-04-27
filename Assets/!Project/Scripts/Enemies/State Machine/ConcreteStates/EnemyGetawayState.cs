@@ -15,6 +15,7 @@ namespace RPGProject
         {
             base.EnterState();
             NavigateToSafePoint();
+            Debug.Log("Entered Getaway State");
         }
 
         public override void ExitState()

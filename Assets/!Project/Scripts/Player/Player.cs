@@ -19,6 +19,7 @@ namespace RPGProject {
         [field: SerializeField] public float CostSpell { get; private set; } = 20f;
         [field: SerializeField] public float MageAttackCooldown { get; private set; } = 3.0f;
         [field: SerializeField] public float PhysicAttackCooldown { get; private set; } = 2.0f;
+        [field: SerializeField] public CharacterAudioController AudioController { get; private set; } = null;
 
         #if UNITY_EDITOR
         [field: SerializeField] public bool IsGodMode { get; private set; } = false;
@@ -107,6 +108,8 @@ namespace RPGProject {
             float coefficient = (speedX != 0 && speedZ != 0) ? Mathf.Sqrt(2) : 1;
             rigidbody.linearVelocity = transform.right * (speedX / coefficient) + new Vector3(0, rigidbody.linearVelocity.y, 0) + transform.forward * (speedZ / coefficient);
             animator.SetBool("isMove", !(speedX == 0 && speedZ == 0));
+            if (!(speedX == 0 && speedZ == 0)) AudioController.Play("walking");
+            else AudioController.Stop("walking");
         }
 
         void PhysicAttack() {
@@ -140,7 +143,7 @@ namespace RPGProject {
                     }
                 }
             }
-
+            AudioController.Play("sword_attack");
             gameManager.ClearNullEnemies();
         }
 
@@ -151,6 +154,8 @@ namespace RPGProject {
             isAttack = true;
             currentAttackCooldown = MageAttackCooldown;
             animator.SetTrigger("TriggerMageAttack");
+            AudioController.Play("mage_attack");
+            
             SwapWeapons(false);
 
             SpendMP(CostSpell);
@@ -189,6 +194,7 @@ namespace RPGProject {
         public void TakeDamage(float damage) {
             CurrentHP = Mathf.Max(0, CurrentHP - damage);
             hud.SetHP(CurrentHP);
+            AudioController.Play("hit");
             if (CurrentHP <= 0) Death();
         }
 

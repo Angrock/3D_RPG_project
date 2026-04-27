@@ -3,7 +3,7 @@ namespace RPGProject {
         public override void InitializeValues() {
             base.InitializeValues();
             type = GameManager.EnemiesTypes.Range;
-            MaxHP = 20f;
+            MaxHP = 50f;
             Damage = 1.25f;
             Speed = 1.2f;
             AttackDistance = 6.0f;

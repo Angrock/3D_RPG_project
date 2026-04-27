@@ -10,6 +10,7 @@ namespace RPGProject
     {
         [Header("Components")]
         [SerializeField] private Slider sliderHP;
+        public CharacterAudioController AudioController;
         public NavMeshAgent navMeshAgent;
         public Animator animator;
 
@@ -96,6 +97,8 @@ namespace RPGProject
         {
             health = Mathf.Max(0, health - damageAmount);
             sliderHP.value = health;
+
+            AudioController.Play("hit");
 
             if (!isAgressive)
                 isAgressive = true;

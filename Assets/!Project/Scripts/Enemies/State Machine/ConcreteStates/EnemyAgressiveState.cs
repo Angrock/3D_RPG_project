@@ -29,11 +29,11 @@ namespace RPGProject
                 return;
             }
 
-            //if (enemy.CurrentHP <= enemy.MaxHP * enemy.GetawayHPThreshold)
-            //{
-            //    stateMachine.ChangeState(enemy.GetawayState);
-            //    return;
-            //}
+            if (enemy.CurrentHP <= enemy.MaxHP * enemy.GetawayHPThreshold)
+            {
+               stateMachine.ChangeState(enemy.GetawayState);
+               return;
+            }
 
             Vector3 directionToPlayer = enemy.player.transform.position - enemy.transform.position;
             float approachDistance = enemy.AttackDistance * 0.8f;

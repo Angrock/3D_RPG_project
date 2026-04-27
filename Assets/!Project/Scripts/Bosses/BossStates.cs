@@ -54,6 +54,7 @@ namespace RPGProject
         {
             base.Enter(boss);
             boss.animator.SetTrigger("Walk");
+            boss.AudioController.PlayLoop("walking");
             boss.navMeshAgent.isStopped = false;
             SetRandomPatrolPoint();
         }
@@ -74,6 +75,7 @@ namespace RPGProject
             if (!boss.navMeshAgent.pathPending && boss.navMeshAgent.remainingDistance < 0.5f)
             {
                 boss.stateMachine.ChangeState(new IdleState());
+                boss.AudioController.Stop("walking");
             }
 
             // Увидел игрока - атаковать
@@ -81,6 +83,7 @@ namespace RPGProject
             {
                 if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
                     boss.stateMachine.ChangeState(new AttackState());
+                    boss.AudioController.Stop("walking");
             }
         }
 
@@ -106,6 +109,7 @@ namespace RPGProject
             boss.navMeshAgent.isStopped = true;
 
             boss.animator.SetBool("isAttack", true);
+            boss.AudioController.PlayLoop("attack");
             //boss.animator.SetTrigger("Attack");
 
             isStrongAttackNext = (Random.Range(0, 101) < boss.strongAttackChance) ? true : false;
