@@ -18,9 +18,8 @@ public class AudioSettingsController : MonoBehaviour
     [Header("Persistence")]
     [SerializeField] private string prefsKeyPrefix = "AudioVol_";
 
-    void Awake()
+    void Start()
     {
-        // Инициализация слайдеров: загружаем сохранённые значения
         SetupSlider(masterSlider, masterParam);
         SetupSlider(sfxSlider, sfxParam);
         SetupSlider(musicSlider, musicParam);
@@ -30,14 +29,10 @@ public class AudioSettingsController : MonoBehaviour
     {
         if (slider == null) return;
         
-        // Загружаем из PlayerPrefs (0..1), по умолчанию 1.0
         float saved = PlayerPrefs.GetFloat(prefsKeyPrefix + parameterName, 1f);
         slider.value = saved;
         
-        // Применяем сразу при старте
         ApplyVolume(parameterName, saved);
-        
-        // Подписываем на изменения
         slider.onValueChanged.AddListener(val => OnSliderChanged(parameterName, val));
     }
 
@@ -45,10 +40,9 @@ public class AudioSettingsController : MonoBehaviour
     {
         ApplyVolume(parameterName, linearValue);
         PlayerPrefs.SetFloat(prefsKeyPrefix + parameterName, linearValue);
-        PlayerPrefs.Save(); // Можно вынести в отдельный менеджер сохранений
+        PlayerPrefs.Save();
     }
 
-    // Конвертация линейного 0..1 → децибелы -80..0
     public static float LinearToDecibels(float linear)
     {
         if (linear <= 0.0001f) return -80f; // Практическая тишина
@@ -61,7 +55,6 @@ public class AudioSettingsController : MonoBehaviour
         mixer.SetFloat(parameterName, db);
     }
 
-    // Опционально: утилита для чтения текущего значения (например, для синхронизации UI)
     public static float DecibelsToLinear(float db)
     {
         return Mathf.Pow(10f, db / 20f);

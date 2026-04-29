@@ -2062,7 +2062,6 @@ MonoBehaviour:
     is3D: 1
     cooldownSec: 0
     priority: 0
-    isLoop: 0
   - id: walking
     clip: {fileID: 8300000, guid: 65c962b71ce331743ac5434e568eb616, type: 3}
     group: {fileID: -2386979578565716757, guid: f0c36ffb4f8c1cc4389b3873d9031762, type: 2}
@@ -2071,7 +2070,6 @@ MonoBehaviour:
     is3D: 1
     cooldownSec: 0
     priority: 0
-    isLoop: 0
   - id: hit
     clip: {fileID: 8300000, guid: f24a6535e2fdd6749aced54c17348926, type: 3}
     group: {fileID: -2386979578565716757, guid: f0c36ffb4f8c1cc4389b3873d9031762, type: 2}
@@ -2080,7 +2078,6 @@ MonoBehaviour:
     is3D: 1
     cooldownSec: 1
     priority: 0
-    isLoop: 0
   - id: death
     clip: {fileID: 8300000, guid: 1b7ca6fe9cd8e7244a855913a5954d59, type: 3}
     group: {fileID: -2386979578565716757, guid: f0c36ffb4f8c1cc4389b3873d9031762, type: 2}
@@ -2089,7 +2086,6 @@ MonoBehaviour:
     is3D: 1
     cooldownSec: 1
     priority: 0
-    isLoop: 0
   poolSize: 6
 --- !u!1 &6217069739330812720
 GameObject:

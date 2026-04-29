@@ -17,7 +17,6 @@ namespace RPGProject
 
         public override void Update()
         {
-            // Если увидел игрока - сразу в Attack
             if (boss.CanSeePlayer())
             {
                 if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
@@ -26,7 +25,6 @@ namespace RPGProject
 
             idleTimer += Time.deltaTime;
 
-            // Переход в Walk через время
             if (idleTimer >= idleDuration)
             {
                 boss.stateMachine.ChangeState(new WalkState());
@@ -61,7 +59,6 @@ namespace RPGProject
 
         private void SetRandomPatrolPoint()
         {
-            // Случайная точка в радиусе патрулирования
             Vector3 randomDir = Random.insideUnitSphere * boss.patrolRadius;
             randomDir += boss.transform.position;
             UnityEngine.AI.NavMesh.SamplePosition(randomDir, out var hit, boss.patrolRadius, -1);
@@ -71,14 +68,12 @@ namespace RPGProject
 
         public override void Update()
         {
-            // Если достиг точки патрулирования
             if (!boss.navMeshAgent.pathPending && boss.navMeshAgent.remainingDistance < 0.5f)
             {
                 boss.stateMachine.ChangeState(new IdleState());
                 boss.AudioController.Stop("walking");
             }
 
-            // Увидел игрока - атаковать
             if (boss.CanSeePlayer())
             {
                 if ((!Settings.IsPeacefulGame) || (Settings.IsPeacefulGame && boss.isAgressive))
@@ -124,19 +119,16 @@ namespace RPGProject
             attackCooldown += Time.deltaTime;
             boss.transform.LookAt(boss.player.transform, Vector3.up);
 
-            // Атака с задержкой
             if (!hasAttacked && attackCooldown >= attackDelay * 0.5f)
             {
                 hasAttacked = true;
                 boss.AttackPlayer();
             }
 
-            // После анимации атаки проверяем дистанцию
             if (attackCooldown >= attackDelay)
             {
                 if (boss.CanSeePlayer() && boss.IsInAttackRange())
                 {
-                    // Повторная атака
                     if (isStrongAttackNext)
                     {
                         boss.stateMachine.ChangeState(new StrongAttackState());
@@ -148,12 +140,10 @@ namespace RPGProject
                 }
                 else if (boss.CanSeePlayer() && !boss.IsInAttackRange())
                 {
-                    // Подойти ближе
                     boss.stateMachine.ChangeState(new WalkState());
                 }
                 else
                 {
-                    // Потерял игрока
                     boss.stateMachine.ChangeState(new IdleState());
                 }
             }
@@ -200,7 +190,7 @@ namespace RPGProject
             attackCooldown += Time.deltaTime;
             boss.transform.LookAt(boss.player.transform, Vector3.up);
 
-            // Атака с задержкой
+            // пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (!hasAttacked && attackCooldown >= attackDelay * 0.5f)
             {
                 //Debug.Log($"StrongAttackState: Update -> boss strong attacks player");
@@ -208,23 +198,23 @@ namespace RPGProject
                 boss.StrongAttackPlayer();
             }
 
-            // После анимации атаки проверяем дистанцию
+            // пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
             if (attackCooldown >= attackDelay)
             {
                 if (boss.CanSeePlayer() && boss.IsInAttackRange())
                 {
                     //Debug.Log($"StrongAttackState: Update -> switch to ordinary attack");
-                    // Обычная атака
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     boss.stateMachine.ChangeState(new AttackState());
                 }
                 else if (boss.CanSeePlayer() && !boss.IsInAttackRange())
                 {
-                    // Подойти ближе
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                     boss.stateMachine.ChangeState(new WalkState());
                 }
                 else
                 {
-                    // Потерял игрока
+                    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
                     boss.stateMachine.ChangeState(new IdleState());
                 }
             }
@@ -258,7 +248,7 @@ namespace RPGProject
             boss.navMeshAgent.speed = 0;
             boss.navMeshAgent.isStopped = true;
 
-            // Отключаем коллайдер, чтобы не мешал
+            // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
             boss.GetComponent<Collider>().enabled = false;
 
             boss.gameManager.Scores += Constants.BossKillScore;
@@ -269,11 +259,11 @@ namespace RPGProject
             timer += Time.deltaTime;
             if (timer >= destroyDelay)
             {
-                boss.enabled = false; // Отключаем компонент врага
+                boss.enabled = false; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
                 boss.gameManager.RemoveBoss(boss);
             }
         }
 
-        public override void OnTakeDamage(float damage) { } // Мёртвый не получает урон
+        public override void OnTakeDamage(float damage) { } // МёпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
     }
 }
