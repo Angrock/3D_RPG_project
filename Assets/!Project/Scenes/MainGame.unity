@@ -10980,83 +10980,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1674991287}
   m_CullTransparentMesh: 1
---- !u!1001 &1676637802
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1785943383405540319, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1785943383405540319, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1785943383405540319, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_AnchorMin.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1949400030429791616, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_AnchorMax.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1949400030429791616, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3688260323216230210, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_Name
-      value: ZombieBoss
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 43.399227
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.399805
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 39.46012
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7829033547582636471, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 31a61f02a770f0043ad272729ad2a60c, type: 3}
 --- !u!1 &1688393015
 GameObject:
   m_ObjectHideFlags: 0
@@ -15465,7 +15388,7 @@ MonoBehaviour:
   <MageAttackCooldown>k__BackingField: 3
   <PhysicAttackCooldown>k__BackingField: 2
   <AudioController>k__BackingField: {fileID: 561367734}
-  <IsGodMode>k__BackingField: 1
+  <IsGodMode>k__BackingField: 0
   <IsStrongMode>k__BackingField: 0
 --- !u!54 &5866666021637831327
 Rigidbody:
@@ -16455,4 +16378,3 @@ SceneRoots:
   - {fileID: 1613144889}
   - {fileID: 621965412}
   - {fileID: 1744530835}
-  - {fileID: 1676637802}
