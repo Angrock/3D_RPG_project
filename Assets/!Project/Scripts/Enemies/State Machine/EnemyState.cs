@@ -2,18 +2,14 @@ using UnityEngine;
 
 namespace RPGProject
 {
-    public class EnemyState
+    public abstract class EnemyState
     {
         protected BaseEnemy enemy;
-        protected EnemyStateMachine stateMachine;
 
-        public EnemyState(BaseEnemy enemy, EnemyStateMachine stateMachine)
+        public virtual void EnterState(BaseEnemy enemy)
         {
             this.enemy = enemy;
-            this.stateMachine = stateMachine;
         }
-
-        public virtual void EnterState() { }
         public virtual void ExitState() { }
         public virtual void FixedUpdate() { }
     }

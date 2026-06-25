@@ -1,17 +1,12 @@
-using UnityEditorInternal;
 using UnityEngine;
 
 namespace RPGProject
 {
     public class EnemyAgressiveState : EnemyState
     {
-        public EnemyAgressiveState(BaseEnemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
+        public override void EnterState(BaseEnemy enemy)
         {
-        }
-
-        public override void EnterState()
-        {
-            base.EnterState();
+            base.EnterState(enemy);
         }
 
         public override void ExitState()
@@ -25,14 +20,14 @@ namespace RPGProject
 
             if (Settings.IsPeacefulGame)
             {
-                stateMachine.ChangeState(enemy.GetawayState);
+                enemy.StateMachine.ChangeState(new EnemyGetawayState());
                 return;
             }
 
             if (enemy.CurrentHP <= enemy.MaxHP * enemy.GetawayHPThreshold)
             {
-               stateMachine.ChangeState(enemy.GetawayState);
-               return;
+                enemy.StateMachine.ChangeState(new EnemyGetawayState());
+                return;
             }
 
             Vector3 directionToPlayer = enemy.player.transform.position - enemy.transform.position;
@@ -45,12 +40,12 @@ namespace RPGProject
             if (distanceToPlayer <= enemy.AttackDistance)
             {
                 enemy.animator.SetBool("isMove", false);
-                stateMachine.ChangeState(enemy.AttackState);
+                enemy.StateMachine.ChangeState(new EnemyAttackState());
             }
 
             if (enemy.PlayerNotInRange(enemy.player))
             {
-                stateMachine.ChangeState(enemy.IdleState);
+                enemy.StateMachine.ChangeState(new EnemyIdleState());
             }
         }
     }

@@ -5,13 +5,10 @@ namespace RPGProject
     public class EnemyIdleState : EnemyState
     {
         private Vector3 _targetPosition;
-        public EnemyIdleState(BaseEnemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
-        {
-        }
 
-        public override void EnterState()
+        public override void EnterState(BaseEnemy enemy)
         {
-            base.EnterState();
+            base.EnterState(enemy);
             MoveToRandomPoint();
             Debug.Log("Entered Idle State");
         }
@@ -42,7 +39,7 @@ namespace RPGProject
             }
             else if (!enemy.PlayerNotInRange(enemy.player))
             {
-                stateMachine.ChangeState(enemy.AgressiveState);
+                enemy.StateMachine.ChangeState(new EnemyAgressiveState());
             }
         }
 

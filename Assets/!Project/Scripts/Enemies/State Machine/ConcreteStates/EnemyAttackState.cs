@@ -6,13 +6,9 @@ namespace RPGProject
     {
         private float timeAttack;
 
-        public EnemyAttackState(BaseEnemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
+        public override void EnterState(BaseEnemy enemy)
         {
-        }
-
-        public override void EnterState()
-        {
-            base.EnterState();
+            base.EnterState(enemy);
             timeAttack = 5f;
             enemy.agent.isStopped = true;
         }
@@ -31,19 +27,19 @@ namespace RPGProject
 
             if (Settings.IsPeacefulGame)
             {
-                stateMachine.ChangeState(enemy.GetawayState);
+                enemy.StateMachine.ChangeState(new EnemyGetawayState());
                 return;
             }
 
             if (enemy.CurrentHP <= enemy.MaxHP * enemy.GetawayHPThreshold)
             {
-               stateMachine.ChangeState(enemy.GetawayState);
-               return;
+                enemy.StateMachine.ChangeState(new EnemyGetawayState());
+                return;
             }
 
             if (enemy.GetDistanceToPlayer() > enemy.AttackDistance)
             {
-                stateMachine.ChangeState(enemy.AgressiveState);
+                enemy.StateMachine.ChangeState(new EnemyAgressiveState());
                 return;
             }
 

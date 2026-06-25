@@ -22,10 +22,6 @@ namespace RPGProject {
         
 
         public EnemyStateMachine StateMachine { get; set; }
-        public EnemyIdleState IdleState { get; set; }
-        public EnemyAgressiveState AgressiveState { get; set; }
-        public EnemyAttackState AttackState { get; set; }
-        public EnemyGetawayState GetawayState { get; set; }
 
         public NavMeshAgent agent;
         [HideInInspector] public Animator animator;
@@ -37,12 +33,7 @@ namespace RPGProject {
         [SerializeField] protected CharacterAudioController AudioController;
         void Awake() {
             
-            StateMachine = new EnemyStateMachine();
-
-            IdleState = new EnemyIdleState(this, StateMachine);
-            AgressiveState = new EnemyAgressiveState(this, StateMachine);
-            AttackState = new EnemyAttackState(this, StateMachine);
-            GetawayState = new EnemyGetawayState(this, StateMachine);
+            StateMachine = new EnemyStateMachine(this);
 
             if (isInitialized) return;
 
@@ -61,7 +52,7 @@ namespace RPGProject {
         }
 
         void Start() {
-            StateMachine.Initialize(IdleState);
+            StateMachine.Initialize(new EnemyIdleState());
             player = EntrypointBootstrapper.Instance?.Installer?.Resolve<Player>();
 
             gameManager = EntrypointBootstrapper.Instance?.Installer?.Resolve<GameManager>();
@@ -138,7 +129,7 @@ namespace RPGProject {
             AudioController.Play("hit");
 
             if (Settings.IsPeacefulGame) {
-                StateMachine.ChangeState(GetawayState);
+                StateMachine.ChangeState(new EnemyGetawayState());
             }
 
             if (CurrentHP <= 0) Death();

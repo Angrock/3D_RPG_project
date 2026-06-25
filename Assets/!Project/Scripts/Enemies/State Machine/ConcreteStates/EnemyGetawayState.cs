@@ -7,13 +7,9 @@ namespace RPGProject
     {
         private Vector3 _targetPosition;
 
-        public EnemyGetawayState(BaseEnemy enemy, EnemyStateMachine stateMachine) : base(enemy, stateMachine)
+        public override void EnterState(BaseEnemy enemy)
         {
-        }
-
-        public override void EnterState()
-        {
-            base.EnterState();
+            base.EnterState(enemy);
             NavigateToSafePoint();
             Debug.Log("Entered Getaway State");
         }
@@ -34,7 +30,7 @@ namespace RPGProject
                     NavigateToSafePoint();
                     return;
                 }
-                stateMachine.ChangeState(enemy.IdleState);
+                enemy.StateMachine.ChangeState(new EnemyIdleState());
             }
         }
 
